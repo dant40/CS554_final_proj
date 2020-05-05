@@ -1,0 +1,19 @@
+{
+  "name": "cs554_final_proj",
+  "version": "1.0.0",
+  "description": "fruit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dant40/CS554_final_proj.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dant40/CS554_final_proj/issues"
+  },
+  "homepage": "https://github.com/dant40/CS554_final_proj#readme"
+}
