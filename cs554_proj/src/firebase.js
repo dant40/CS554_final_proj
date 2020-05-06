@@ -1,7 +1,7 @@
-import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/firestore";
-
+import firebase from "firebase/app";
+//this stuff should be environment variables in production, since this is obviouisly insecure
+//Don't really care in the context of this project tho
 const firebaseConfig = {
     apiKey: "AIzaSyD5ZTkBxReq1gHWg1TYoaIGO6oHGaAR6Ak",
     authDomain: "cs554finalproj.firebaseapp.com",
@@ -12,12 +12,4 @@ const firebaseConfig = {
     appId: "1:568173716710:web:63a05733b09f2ad1838727"
   };
 
-firebase.initializeApp(firebaseConfig);
-
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
-
-const provider = new firebase.auth.GoogleAuthProvider();
-export const signInWithGoogle = () => {
-    auth.signInWithPopup(provider);
-  };
+export const fb = firebase.initializeApp(firebaseConfig)
