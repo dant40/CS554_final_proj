@@ -1,5 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import fb  from './firebase';
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -20,7 +21,7 @@ function Login(){
         if(user){
         return <p>{user.user.email}</p>
         }
-        else return <p>nothin</p>
+        else return <p>No user info</p>
     }
 
     return(
