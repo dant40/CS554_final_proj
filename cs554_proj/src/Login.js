@@ -1,33 +1,29 @@
-import React, {useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import fb  from './firebase';
 import firebase from "firebase/app";
 import "firebase/auth";
+//import {Redirect } from "react-router-dom";
+function Login(props){
 
-function Login(){
-    const [user,setUser] = useState(null);
+    // useEffect(() => {
+    //     console.log(props)
+    // })
 
     function handleSignIn(){
         const provider = new firebase.auth.GoogleAuthProvider();
         try{
-            firebase.auth().signInWithPopup(provider).then(result => setUser(result))
+            firebase.auth().signInWithPopup(provider).then(result => props.onLogin(result.user))
         }catch(e){
             console.log(e)
         }
-    }
-
-    function showUser(){
-        if(user){
-        return <p>{user.user.email}</p>
-        }
-        else return <p>No user info</p>
+        
     }
 
     return(
         <div>
             <Button variant="primary"  onClick={() => handleSignIn()}>Sign-in with Google</Button>
-            {showUser()}
         </div>
     )
 
