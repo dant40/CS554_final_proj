@@ -5,9 +5,12 @@ import {
   Switch,
   Route,
   Link,
+  Redirect
 } from "react-router-dom";
 import './App.css';
 import Login from "./Login"
+import Home from "./Home"
+import Friends from "./Friends"
 function App() {
     
   const [user,setUser] = useState(null);
@@ -24,7 +27,10 @@ function App() {
             </nav>
             <Switch>
             <Route exact path="/">
-              {(user !== null) ? <Home/> : <Login onLogin = {setUser}/>}
+              {(user !== null) ? <Home user = {user}/> : <Login onLogin = {setUser}/>}
+            </Route>
+            <Route exact path="/friends">
+            {(user !== null) ? <Friends user = {user}/> : <Redirect to ="/"/> }
             </Route>
             </Switch>
           </div>
@@ -32,13 +38,13 @@ function App() {
       </div>
     );
   
-    function Home() {
-      return (
-        <div>
-          <h2>Welcome {user.email}</h2>
-        </div>
-      );
-    }
+    // function Home() {
+    //   return (
+    //     <div>
+    //       <h2>Welcome {user.email}</h2>
+    //     </div>
+    //   );
+    // }
 
 }
 
