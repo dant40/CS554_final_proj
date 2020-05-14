@@ -6,13 +6,6 @@ var config = {
   type: Phaser.CANVAS,
   width: 800,
   height: 600,
-  physics: {
-    default: 'arcade',
-    arcade: {
-        gravity: { y: 300 },
-        debug: false
-    }
-},
   scene: {
       preload: preload,
       create: create,
@@ -22,7 +15,7 @@ var config = {
 
 var scoreText;
 var score =0;
-var cursors;
+var fruit;
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -31,6 +24,7 @@ function preload ()
   this.load.image('ground', 'assets/platform.png');
   this.load.image('tree', 'assets/tree.png');
   this.load.image('apple', 'assets/apple.jpg');
+  this.load.image('orange', 'assets/orange.png');
 }
 
 function create ()
@@ -39,18 +33,23 @@ function create ()
   this.add.image(400, 300, 'sky');
   //this.add.image(400, 400, 'tree');
   this.add.image(400, 300, 'tree');
-  var sprite = this.add.sprite(400, 200, 'apple').setInteractive();
 
   //  The score
   scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
-  sprite.on('pointerdown', function(pointer){
-    score++;
-    scoreText.setText('Score: '+score);
-  });
 }
 
 function update (){
-
+  if(score<10){
+    fruit = this.add.sprite(400, 200, 'apple').setInteractive();
+    //fruit.setActive(false).setVisible(false);
+  }else if(score>=10){
+    //fruit.setActive(false).setVisible(false);
+    fruit = this.add.sprite(400, 200, 'orange').setInteractive();
+  }
+  fruit.on('pointerdown', function(pointer){
+    score++;
+    scoreText.setText('Score: '+score);
+  });
 }
 
 
