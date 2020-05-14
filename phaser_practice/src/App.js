@@ -35,6 +35,11 @@ var sell;
 var currCost = 1;
 var nextFruit;
 var upgradeMessage;
+var worker;
+var workerOwned;
+var timedEvent;
+var test, test2;
+var i = 1;
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -52,6 +57,7 @@ function preload ()
   this.load.image('bench', 'assets/bench.png');
   this.load.image('upgrade', 'assets/upgrade.png');
   this.load.image('sell', 'assets/sell.png');
+  this.load.image('worker', 'assets/worker.png');
 }
 
 function create ()
@@ -65,17 +71,25 @@ function create ()
   //upgrade farm
   upgradeText = this.add.image(50, 568, 'upgrade').setInteractive();
   if(currCost==1){
-    nextFruit = 'oranges.\nPrice: $100';
+    nextFruit = 'oranges.\nPrice: $10';
   }else{
-    nextFruit = 'peaches.\nPrice: $200';
+    nextFruit = 'peaches.\nPrice: $20';
   }
   upgradeMessage = this.add.text(110, 552, 'Upgrade to '+nextFruit, { fontSize: '20px', fill: '#000' });
   upgradeText.on('pointerdown', function(pointer){
-    if(moneyNum>=100*currCost && currCost<3){
+    if(moneyNum>=10*currCost && currCost<3){
+      moneyNum -= 10*currCost;
       currCost++;
-      moneyNum -= 100*currCost;
       moneyText.setText('$'+moneyNum);
-      upgradeMessage.setText('Upgrade to '+nextFruit);
+      if(currCost==1){
+        nextFruit = 'oranges.\nPrice: $10';
+        upgradeMessage.setText('Upgrade to '+nextFruit);
+      }else if(currCost==2){
+        nextFruit = 'peaches.\nPrice: $20';
+        upgradeMessage.setText('Upgrade to '+nextFruit);
+      }else{
+        upgradeMessage.setText('No more upgrades')
+      }
     }
   });
   
@@ -172,10 +186,22 @@ function create ()
 
   //Shop for fertilizer or pickers(add display)
   storeText = this.add.text(610, 400, 'Shop', { fontSize: '32px', fill: '#000' });
-  this.add.image(650, 520, 'bench');
+  this.add.text(660, 550, 'Worker: $10\n Will pick\nfruit for you', { fontSize: '16px', fill: '#000' });
+  //this.add.image(650, 520, 'bench');
+  worker = this.add.image(720, 500, 'worker').setInteractive();
+  
+  timedEvent = this.time.addEvent({ delay: 2000, callback: onEvent, callbackScope: this, loop:true});
 }
 
 function update (){
+  worker.on('pointerdown', function(pointer){
+    if(moneyNum>=10){
+      workerOwned=true;//I set it true here but it doesn't read outside I guess?
+      moneyNum-=10;
+      moneyText.setText('$'+moneyNum);
+      test.setText(workerOwned);
+    }
+  });
   //Apple, orange, or peach
   if(currCost == 1){//score only for testing, should remove eventually
     fruit = this.add.image(400, 200, 'apple').setInteractive();
@@ -198,11 +224,24 @@ function update (){
       peachText.setText('Peaches: '+peachNum);
     });
   }
-
-
   saveText.on('pointerdown', function(pointer){
     //Save, store stuff in db
   })
+}
+//worker picking
+function onEvent(){
+  if(workerOwned){
+    if(currCost==1){
+      appleNum++;
+      appleText.setText("Apples: "+ appleNum);
+    }else if(currCost==2){
+      orangeNum++;
+      orangeText.setText("Oranges: "+ orangeNum);
+    }else{
+      peachNum++;
+      peachText.setText("Peaches: "+ peachNum);
+    }
+  }
 }
 
 function App() {
