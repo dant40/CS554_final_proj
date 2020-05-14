@@ -16,16 +16,23 @@ class ChatGUI extends React.Component{
         this.socket.on("RECEIVE_MESSAGE", function(data){
             appendMessages(data)
         })
-    
+        
+        this.socket.on("RECIEVE_INITIAL_MESSAGES",function(data){
+            getInitial(data)
+        })
 
         const appendMessages = data => {
             this.setState({prevMessages: [...this.state.prevMessages, data]})
         }
 
+        const getInitial = data => {
+            this.setState({prevMessages: data})
+        }
+
         this.sendMessage = e => {
             e.preventDefault();
             this.socket.emit('SEND_MESSAGE', {
-                author: "test",
+                author: this.props.senderID,
                 message: this.state.messageText
             })
             this.setState({messageText: ''});
@@ -34,14 +41,18 @@ class ChatGUI extends React.Component{
         }
        
     }
+    componentDidMount(){
+        this.socket.emit('GET_ALL_MESSAGES')
 
+    }
+    
     render(){
         return(
             <div style = {{marginTop:"100px"}}>
-                {this.state.prevMessages.map( (item) => {
+                {this.state.prevMessages.map( (item,i) => {
                   
                     return(  
-                        <div><p>{item.author} : {item.message}</p></div>
+                        <div id = {"key" + i} ><p>{item.author} : {item.message}</p></div>
                     )
                 })}
                 <Form>

@@ -11,11 +11,15 @@ import ChatGUI from "./chatStuff/ChatGUI"
 const friends = [{
     _id: "1",
     username: "SafariDan",
-    profilePic: ""
+    email: "s@s",
+    profilePic: "",
+    friendsList: []
 }, {
     _id: "2",
     username: "Myon",
-    profilePic: ""
+    email: "m@m",
+    profilePic: "",
+    friendsList: []
 }]
 
 
@@ -44,6 +48,10 @@ function Friends(props){
     //will be used as the way to add friends 
     //can search by username, obviously will need db stuff here too
     function searchFriends(){
+
+    }
+
+    function addFriend(){
 
     }
 
@@ -86,7 +94,7 @@ function Friends(props){
                 <Modal.Title>Chat</Modal.Title>
                 </Modal.Header>
                 <Modal.Body >
-                  <ChatGUI senderID = "tester1"></ChatGUI>
+                  <ChatGUI senderID = {props.user.displayName}></ChatGUI>
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
