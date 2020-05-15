@@ -10,6 +10,7 @@ import {
 import './App.css';
 import Login from "./Login"
 import Home from "./Home"
+import GameDev from "./GameDev"
 import Friends from "./Friends"
 function App() {
     
@@ -28,6 +29,7 @@ function App() {
             <Switch>
             <Route exact path="/">
               {(user !== null) ? <Home user = {user}/> : <Login onLogin = {setUser}/>}
+              <GameDev></GameDev>
             </Route>
             <Route exact path="/friends">
             {(user !== null) ? <Friends user = {user}/> : <Redirect to ="/"/> }
