@@ -41,6 +41,32 @@ const create = async function create(username, password){
 	return account;
 }
 
+const login = async function login(username, password){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(password == undefined){
+		throw new Error("password is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	if(typeof(password) !== "string"){
+		throw new Error("password is not of type string");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists == null){
+		throw new Error("no account with that username");
+	}
+	let hashPassword = await bcrypt.hash(password, 16);
+	if(await bcrypt.compare(password, usernameExists.password) == false){
+		throw new Error("password is incorrect");
+	}
+	return usernameExists;
+
+}
+
 const get = async function get(username){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -156,4 +182,4 @@ const addFriend = async function addFriend(username, friend){
 	return await get(username);
 }
 
-module.exports = {create, get, changeUsername, changePassword, addFriend};
+module.exports = {create, get, login, changeUsername, changePassword, addFriend};
