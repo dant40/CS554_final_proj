@@ -14,10 +14,7 @@ var config = {
 };
 
 var fruit;
-var storeText;
-var saveText;
-var storeBox;
-var appleText, orangeText, peachText, moneyText, saveText, storeText;
+var appleText, orangeText, peachText, moneyText, saveText;
 var appleSell, orangeSell, peachSell;
 var plusApple, plusOrange, plusPeach, minusApple, minusOrange, minusPeach;
 var appleSellNum=0;
@@ -25,7 +22,6 @@ var peachSellNum=0;
 var orangeSellNum = 0;
 var moneyEarned = 0;
 var moneyEarnedText;
-var score = 0;//temp
 var appleNum = 0
 var orangeNum=0
 var peachNum=0
@@ -37,9 +33,9 @@ var nextFruit;
 var upgradeMessage;
 var worker;
 var workerOwned;
-var timedEvent;
-var test, test2;
-var i = 1;
+var fertilizerApple, fertilizerOrange, fertilizerPeach;
+var fertilizerAppleOwned, fertilizerOrangeOwned, fertilizerPeachOwned;
+
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -58,6 +54,9 @@ function preload ()
   this.load.image('upgrade', 'assets/upgrade.png');
   this.load.image('sell', 'assets/sell.png');
   this.load.image('worker', 'assets/worker.png');
+  this.load.image('fertilizerApple', 'assets/fertilizerApple.png');
+  this.load.image('fertilizerOrange', 'assets/fertilizerOrange.png');
+  this.load.image('fertilizerPeach', 'assets/fertilizerPeach.png');
 }
 
 function create ()
@@ -185,28 +184,68 @@ function create ()
   });
 
   //Shop for fertilizer or pickers(add display)
-  storeText = this.add.text(610, 400, 'Shop', { fontSize: '32px', fill: '#000' });
-  this.add.text(660, 550, 'Worker: $10\n Will pick\nfruit for you', { fontSize: '16px', fill: '#000' });
-  //this.add.image(650, 520, 'bench');
+  this.add.text(610, 400, 'Shop', { fontSize: '32px', fill: '#000' });
+  //Worker
   worker = this.add.image(720, 500, 'worker').setInteractive();
-  
-  timedEvent = this.time.addEvent({ delay: 2000, callback: onEvent, callbackScope: this, loop:true});
+  this.add.text(660, 550, 'Worker: $10\n Will pick\nfruit for you', { fontSize: '16px', fill: '#000' });
+  worker.on('pointerdown', function(pointer){
+    if(moneyNum>=10){
+      workerOwned=true;
+      moneyNum-=10;
+      moneyText.setText('$'+moneyNum);
+    }
+  });
+
+  //Fertilizers
+  this.add.text(510, 550, 'Fertilzer: $100\n Every click\npicks 2 fruits', { fontSize: '16px', fill: '#000' });
+
+  //If worker is owned, add 1 fruit every 2 seconds
+  this.time.addEvent({ delay: 2000, callback: onEvent, callbackScope: this, loop:true});
+
+  saveText.on('pointerdown', function(pointer){//Database stuff goes here
+    //Save, store stuff in db
+  });
 }
 
 function update (){
-  worker.on('pointerdown', function(pointer){
-    if(moneyNum>=10){
-      workerOwned=true;//I set it true here but it doesn't read outside I guess?
-      moneyNum-=10;
-      moneyText.setText('$'+moneyNum);
-      test.setText(workerOwned);
-    }
-  });
+  if(currCost==1){
+    fertilizerApple = this.add.image(570, 495, 'fertilizerApple').setInteractive();
+    fertilizerApple.on('pointerdown', function(pointer){
+      if(moneyNum>=100){
+        fertilizerAppleOwned=true;
+        moneyNum-=100;
+        moneyText.setText('$'+moneyNum);
+      }
+    });
+  }else if(currCost==2){
+    fertilizerOrange = this.add.image(570, 495, 'fertilizerOrange').setInteractive();
+    fertilizerOrange.on('pointerdown', function(pointer){
+      if(moneyNum>=100){
+        fertilizerOrangeOwned=true;
+        moneyNum-=100;
+        moneyText.setText('$'+moneyNum);
+      }
+    });
+  }else{
+    fertilizerPeach = this.add.image(570, 495, 'fertilizerPeach').setInteractive();
+    fertilizerPeach.on('pointerdown', function(pointer){
+      if(moneyNum>=100){
+        fertilizerPeachOwned=true;
+        moneyNum-=100;
+        moneyText.setText('$'+moneyNum);
+      }
+    });
+  }
+
   //Apple, orange, or peach
   if(currCost == 1){//score only for testing, should remove eventually
     fruit = this.add.image(400, 200, 'apple').setInteractive();
     fruit.on('pointerdown', function(pointer){//Increment apples with every touch
-      appleNum++;
+      if(fertilizerAppleOwned){
+        appleNum+=2;
+      }else{
+        appleNum++;
+      }
       appleText.setText('Apples: '+appleNum);
     });
     //fruit.setActive(false).setVisible(false);
@@ -214,19 +253,24 @@ function update (){
     //fruit.setActive(false).setVisible(false);
     fruit = this.add.image(400, 200, 'orange').setInteractive();
     fruit.on('pointerdown', function(pointer){//Increment oranges with every touch
-      orangeNum++;
+      if(fertilizerOrangeOwned){
+        orangeNum+=2;
+      }else{
+        orangeNum++;
+      }
       orangeText.setText('Oranges: '+orangeNum);
     });
   }else if(currCost == 3){
     fruit = this.add.image(400, 200, 'peach').setInteractive();
     fruit.on('pointerdown', function(pointer){//Increment peaches with every touch
-      peachNum++;
+      if(fertilizerPeachOwned){
+        peachNum+=2;
+      }else{
+        peachNum++;
+      }
       peachText.setText('Peaches: '+peachNum);
     });
   }
-  saveText.on('pointerdown', function(pointer){
-    //Save, store stuff in db
-  })
 }
 //worker picking
 function onEvent(){
