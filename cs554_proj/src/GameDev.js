@@ -34,7 +34,6 @@ var config = {
   var fertilizerApple, fertilizerOrange, fertilizerPeach;
   var fertilizerAppleOwned, fertilizerOrangeOwned, fertilizerPeachOwned;
   
-  var game = new Phaser.Game(config);
   
   function preload ()
   {
@@ -288,6 +287,7 @@ var config = {
 function GameDev(props){
     return(
         <div>
+          {new Phaser.Game(config)}
         </div>
     )
 }

@@ -29,10 +29,12 @@ function App() {
             <Switch>
             <Route exact path="/">
               {(user !== null) ? <Home user = {user}/> : <Login onLogin = {setUser}/>}
-              <GameDev></GameDev>
             </Route>
             <Route exact path="/friends">
             {(user !== null) ? <Friends user = {user}/> : <Redirect to ="/"/> }
+            </Route>
+            <Route exact path="/game">
+              <GameDev></GameDev>
             </Route>
             </Switch>
           </div>
