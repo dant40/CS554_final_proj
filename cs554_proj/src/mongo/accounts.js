@@ -222,7 +222,7 @@ const addFriend = async function addFriend(username, friend){
 	return await get(username);
 }
 
-const removeFriend = async function addFriend(username, friend){
+const removeFriend = async function removeFriend(username, friend){
 	if(username == undefined){
 		throw new Error("username is not defined");
 	}

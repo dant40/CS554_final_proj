@@ -1,17 +1,126 @@
 const accounts = require("./accounts")
 const express = require("express");
 const app = express();
+app.use(express.json())
+//in the essence of time, these mongo routes are just wrappers and don't do
+//much error checking, they expect things to be well formed
 
-app.get("/api/create", async (req, res) => {
+app.post("/api/create", async (req, res) => {
+    var acc= {"formatting issue" :"your json was bad!"};
     try{
-     const acc = await accounts.create("testy","mctesterson")
+        //if no password, assume its a google login      
+        const body = req.body;
+        if(body.username && body.password){
+             acc = await accounts.create(body.username, body.password);
+        }
+        else if(body.username)  acc = await accounts.createFromGoogleLogin(body.username);
     }
     catch(e){
-        return res.json({error:e})
+        console.log(e)
+        return res.status(400).json({error: e})
     }
     return res.json(acc)
     
- });
+});
+
+app.post("/api/login", async (req, res) => {
+    var acc={"formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.password){
+             acc = await accounts.login(body.username,body.password)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.get("/api/get", async (req,res) => {
+    var acc = {"formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username){
+             acc = await accounts.get(body.username)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.post("/api/changeUsername", async (req,res) => {
+    var acc ={"formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.newUsername && body.password){
+             acc = await accounts.changeUsername(body.username,body.newUsername,body.password)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.post("/api/changePassword", async (req,res) => {
+    var acc ={"formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.newPassword && body.password){
+             acc = await accounts.changePassword(body.password,body.newPassword,body.username)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.post("/api/addFriend", async (req,res) => {
+    var acc ={"formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.friendName){
+             acc = await accounts.addFriend(body.username,body.friendName)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.post("/api/removeFriend", async (req,res) => {
+    var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.friendName){
+             acc = await accounts.removeFriend(body.username,body.friendName)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.get("/*", async (req,res) => {
+    return res.status(404).json({error: "nice try kiddo"})
+})
 
 app.listen(3001, () => {
     console.log("Mongo Server Going Up");
