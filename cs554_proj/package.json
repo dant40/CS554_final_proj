@@ -24,6 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "startChatServer": "node ./src/chatStuff/ChatServer.js"
+    "startChatServer": "node ./src/chatStuff/ChatServer.js",
+    "startMongoServer": "node ./src/mongo/mongoServer.js"
   }
 }

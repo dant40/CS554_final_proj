@@ -37,7 +37,36 @@ const create = async function create(username, password){
 	if(insert.insertedCount == 0)
 		throw new Error("account cannot be created")
 	var insertId = insert.insertedId;
-	var account = await accountCollection.findOne({_id: insertId});
+	var account = await accountsCollection.findOne({_id: insertId});
+	return account;
+}
+
+const createFromGoogleLogin = async function createFromGoogleLogin(username){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists !== null){
+		return;
+	}
+
+	var newAccount = {
+		"username": username,
+		"password": "",
+		"score": 0,
+		"itemsInventory": [0,0,0],
+		"friends": []
+	}
+
+	var insert = await accountsCollection.insertOne(newAccount);
+	if(insert.insertedCount == 0)
+		throw new Error("account cannot be created")
+	var insertId = insert.insertedId;
+	var account = await accountsCollection.findOne({_id: insertId});
 	return account;
 }
 
@@ -193,4 +222,37 @@ const addFriend = async function addFriend(username, friend){
 	return await get(username);
 }
 
-module.exports = {create, get, login, changeUsername, changePassword, addFriend};
+const removeFriend = async function addFriend(username, friend){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(friend == undefined){
+		throw new Error("password is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	if(typeof(friend) !== "string"){
+		throw new Error("friend is not of type string");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists == null){
+		throw new Error("no account with that username");
+		return;
+	}
+	let friendExists = await accountsCollection.findOne({username: friend});
+	if(friendExists == null){
+		throw new Error("cannot add friend: no account with that username");
+		return;
+	}
+	let friends = usernameExists.friends;
+	friends = friends.filter(e => e !== friend);
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: friends}});
+	if(updated.modifiedCount == 0){
+		throw new Error("could not update password");
+	}
+	return await get(username);
+}
+
+module.exports = {create,createFromGoogleLogin , get, login, changeUsername, changePassword, addFriend, removeFriend};
