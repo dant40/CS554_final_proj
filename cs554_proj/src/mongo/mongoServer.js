@@ -129,9 +129,24 @@ app.post("/api/removeFriend", async (req,res) => {
     try{
         const body = req.body;
         if(body.username && body.friendName){
-             console.log("In mongoserver")
+             
              acc = await accounts.removeFriend(body.username,body.friendName)
-             console.log(acc)
+            
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.post("/api/save", async (req,res) => {
+    var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.score){        
+             acc = await accounts.updateScore(body.username,body.score)
         }
     }catch(e){
         console.log(e)
