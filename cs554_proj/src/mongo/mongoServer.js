@@ -4,6 +4,11 @@ const app = express();
 app.use(express.json())
 //in the essence of time, these mongo routes are just wrappers and don't do
 //much error checking, they expect things to be well formed
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader( "Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+    next();
+  });
 
 app.post("/api/create", async (req, res) => {
     var acc= {"formatting issue" :"your json was bad!"};
@@ -11,6 +16,7 @@ app.post("/api/create", async (req, res) => {
         //if no password, assume its a google login      
         const body = req.body;
         if(body.username && body.password){
+            console.log("creating non google")
              acc = await accounts.create(body.username, body.password);
         }
         else if(body.username)  acc = await accounts.createFromGoogleLogin(body.username);
@@ -28,6 +34,7 @@ app.post("/api/login", async (req, res) => {
     try{
         const body = req.body;
         if(body.username && body.password){
+            console.log("logging in")
              acc = await accounts.login(body.username,body.password)
         }
     }catch(e){

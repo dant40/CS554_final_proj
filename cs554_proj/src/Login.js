@@ -5,7 +5,7 @@ import {Form } from 'react-bootstrap'
 import firebase from "firebase/app";
 import "firebase/auth";
 import Modal from 'react-bootstrap/Modal';
-import * as accounts from "./mongo/accounts";
+
 //import {Redirect } from "react-router-dom";
 function Login(props){
     const [username,setUsername] = useState("")
@@ -15,12 +15,23 @@ function Login(props){
     //     console.log(props)
     // })
 
-    function handleSignIn(){
+   async function handleSignIn(){
         const provider = new firebase.auth.GoogleAuthProvider();
         try{
-            firebase.auth().signInWithPopup(provider).then(result =>
+            firebase.auth().signInWithPopup(provider).then(async (result) =>
                 { 
-                    props.onLogin(result.user); 
+                    let bod= {"username": result.displayName}
+                    const response = await fetch("http://localhost:3001/api/create",{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                          },
+                        body: JSON.stringify(bod)
+                    })
+                    const js = await response.json();
+                    console.log(js)
+                    props.onLogin(js); 
+
                     //const acc =accounts.createFromGoogleLogin(result.user.displayName)
                     //props.onLogin(acc)
                 })
@@ -30,12 +41,59 @@ function Login(props){
         
     }
 
-    function handleNormalSignIn(){
-        //const acc = accounts.create(username,password)
-        //props.onLogin(acc)
+    async function handleNormalSignIn(e){
+        e.preventDefault();
+        let bod= {"username": username, "password": password}
+        const response = await fetch("http://localhost:3001/api/login",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(bod)
+        })
+        const js = await response.json();
+        console.log(js)
+        props.onLogin(js); 
     }
 
-    function createForm(){
+    async function handleNormalCreate(e){
+        //const acc = accounts.create(username,password)
+        //props.onLogin(acc)
+        e.preventDefault();
+        let bod= {"username": username, "password": password}
+        const response = await fetch("http://localhost:3001/api/create",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(bod)
+        })
+        const js = await response.json();
+        console.log(js)
+        props.onLogin(js); 
+    }
+
+    function createForm(flag){
+        if(flag){
+            return(
+                <Form>
+                    <Form.Group>
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control 
+                        placeholder = "username" 
+                        onChange={(e) => setUsername(e.target.value) } 
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value) }  />
+                    </Form.Group>
+                    <Button variant="primary" type="submit" onClick = {(e) => handleNormalCreate(e)}>
+                            Login
+                    </Button>
+                </Form>
+            )
+        }
         return(
             <Form>
                 <Form.Group>
@@ -49,7 +107,7 @@ function Login(props){
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value) }  />
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick = {() => handleNormalSignIn()}>
+                <Button variant="primary" type="submit" onClick = {(e) => handleNormalSignIn(e)}>
                         Login
                 </Button>
             </Form>
@@ -60,7 +118,7 @@ function Login(props){
         <div>
             <h1>Login</h1>
             <div>
-               {createForm()}
+               {createForm(false)}
             </div>
             <Button variant= "secondary" onClick = {() => setShow(true)}>Click here to sign up!</Button>
             <Button variant="primary"  onClick={() => handleSignIn()}>Sign-in with Google</Button>
@@ -70,7 +128,7 @@ function Login(props){
                 <Modal.Title>Sign Up</Modal.Title>
                 </Modal.Header>
                 <Modal.Body >
-                  {createForm()}
+                  {createForm(true)}
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShow(false)}>
