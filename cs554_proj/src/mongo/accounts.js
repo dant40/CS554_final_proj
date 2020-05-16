@@ -220,4 +220,4 @@ const updateScore = async function updateScore(username, score){
 
 }
 
-module.exports = {create, get, login, changeUsername, changePassword, addFriend};
+module.exports = {create, get, login, changeUsername, changePassword, addFriend, updateScore};
