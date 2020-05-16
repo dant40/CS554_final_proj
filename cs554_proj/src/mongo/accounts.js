@@ -41,6 +41,40 @@ const create = async function create(username, password){
 	return account;
 }
 
+const createFromGoogleLogin = async function createFromGoogleLogin(username){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+
+	//let hashPassword = await bcrypt.hash(password, 16);
+
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists !== null){
+		throw new Error("username has been taken");
+		return;
+	}
+
+	var newAccount = {
+		"username": username,
+		"password": "",
+		"score": 0,
+		"itemsInventory": [0,0,0],
+		"friends": []
+	}
+
+	var insert = await accountsCollection.insertOne(newAccount);
+	if(insert.insertedCount == 0)
+		throw new Error("account cannot be created")
+	var insertId = insert.insertedId;
+	var account = await accountCollection.findOne({_id: insertId});
+	return account;
+}
+
+
 const login = async function login(username, password){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -66,6 +100,8 @@ const login = async function login(username, password){
 	return usernameExists;
 
 }
+
+
 
 const get = async function get(username){
 	if(username == undefined){
