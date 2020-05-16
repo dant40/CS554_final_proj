@@ -105,9 +105,16 @@ const changeUsername = async function changeUsername(old, newuser, password){
 	let usernameExists = await accountsCollection.findOne({username: old});
 	if(usernameExists == null){
 		throw new Error("no account with that username");
+		return;
 	}
 	if(await bcrypt.compare(password, usernameExists.password) == false){
 		throw new Error("password is incorrect");
+		return;
+	}
+	let usernameTaken = await accountsCollection.findOne({username: newuser});
+	if(usernameTaken){
+		throw new Error("that username has already been taken");
+		return;
 	}
 	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: newuser, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: usernameExists.friends}});
 	if(updated.modifiedCount == 0){
@@ -139,9 +146,11 @@ const changePassword = async function changePassword(old, newpass, username){
 	let usernameExists = await accountsCollection.findOne({username: username});
 	if(usernameExists == null){
 		throw new Error("no account with that username");
+		return;
 	}
 	if(await bcrypt.compare(old, usernameExists.password) == false){
 		throw new Error("password is incorrect");
+		return;
 	}
 	let hashPassword = await bcrypt.hash(newpass, 16);
 	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: hashPassword, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: usernameExists.friends}});
@@ -168,10 +177,12 @@ const addFriend = async function addFriend(username, friend){
 	let usernameExists = await accountsCollection.findOne({username: username});
 	if(usernameExists == null){
 		throw new Error("no account with that username");
+		return;
 	}
 	let friendExists = await accountsCollection.findOne({username: friend});
 	if(friendExists == null){
 		throw new Error("cannot add friend: no account with that username");
+		return;
 	}
 	let addedFriend = usernameExists.friends;
 	addedFriend.push(friend);
