@@ -12,7 +12,7 @@ var config = {
   };
   
   var fruit;
-  var appleText, orangeText, peachText, moneyText, saveText;
+  var appleText, orangeText, peachText, moneyText, saveText, workerText;
   var appleSell, orangeSell, peachSell;
   var plusApple, plusOrange, plusPeach, minusApple, minusOrange, minusPeach;
   var appleSellNum=0;
@@ -30,6 +30,7 @@ var config = {
   var nextFruit;
   var upgradeMessage;
   var worker;
+  var workerNum = 0;
   var workerOwned;
   var fertilizerApple, fertilizerOrange, fertilizerPeach;
   var fertilizerAppleOwned, fertilizerOrangeOwned, fertilizerPeachOwned;
@@ -93,8 +94,9 @@ var config = {
     appleText = this.add.text(10, 16, 'Apples: '+appleNum, { fontSize: '32px', fill: '#000' });
     orangeText = this.add.text(10, 48, 'Oranges: '+orangeNum, { fontSize: '32px', fill: '#000' });
     peachText = this.add.text(10, 80, 'Peaches: '+peachNum, { fontSize: '32px', fill: '#000' });
-    moneyText = this.add.text(10, 112, '$'+moneyNum, { fontSize: '32px', fill: '#000' });
-    
+    workerText = this.add.text(10, 112, 'Workers:' + workerNum, { fontSize: '32px', fill: '#000' });
+    moneyText = this.add.text(10, 144, '$'+moneyNum, { fontSize: '32px', fill: '#000' });
+
     //Selling fruits for money
     this.add.text(10, 374, 'Fruit to Sell', {fontSize: '32px', fill: '#000' });
     //apples
@@ -188,8 +190,10 @@ var config = {
     worker.on('pointerdown', function(pointer){
       if(moneyNum>=10){
         workerOwned=true;
+        workerNum++;
         moneyNum-=10;
         moneyText.setText('$'+moneyNum);
+        workerText.setText("workers: " + workerNum)
       }
     });
   
@@ -273,13 +277,13 @@ var config = {
   function onEvent(){
     if(workerOwned){
       if(currCost==1){
-        appleNum++;
+        appleNum = appleNum + workerNum * 1;
         appleText.setText("Apples: "+ appleNum);
       }else if(currCost==2){
-        orangeNum++;
+        orangeNum = orangeNum + workerNum * 1;
         orangeText.setText("Oranges: "+ orangeNum);
       }else{
-        peachNum++;
+        peachNum = peachNum + workerNum * 1;
         peachText.setText("Peaches: "+ peachNum);
       }
     }
