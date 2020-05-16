@@ -10,7 +10,6 @@ var config = {
         update: update
     }
   };
-  
   var fruit;
   var appleText, orangeText, peachText, moneyText, saveText;
   var appleSell, orangeSell, peachSell;
@@ -33,6 +32,10 @@ var config = {
   var workerOwned;
   var fertilizerApple, fertilizerOrange, fertilizerPeach;
   var fertilizerAppleOwned, fertilizerOrangeOwned, fertilizerPeachOwned;
+  var pBest = 0;//mongo good maybe
+  var pBestText;
+  var workerText;
+  var fertText;
   
   
   function preload ()
@@ -66,7 +69,7 @@ var config = {
   
     //upgrade farm
     upgradeText = this.add.image(50, 568, 'upgrade').setInteractive();
-    if(currCost==1){
+    if(currCost===1){
       nextFruit = 'oranges.\nPrice: $10';
     }else{
       nextFruit = 'peaches.\nPrice: $20';
@@ -77,14 +80,17 @@ var config = {
         moneyNum -= 10*currCost;
         currCost++;
         moneyText.setText('$'+moneyNum);
-        if(currCost==1){
+        if(currCost===1){
           nextFruit = 'oranges.\nPrice: $10';
           upgradeMessage.setText('Upgrade to '+nextFruit);
-        }else if(currCost==2){
+          fertText.setText('Fertilzer: $100\n Every click\npicks 2 fruits');
+        }else if(currCost===2){
           nextFruit = 'peaches.\nPrice: $20';
           upgradeMessage.setText('Upgrade to '+nextFruit);
+          fertText.setText('Fertilzer: $100\n Every click\npicks 2 fruits');
         }else{
-          upgradeMessage.setText('No more upgrades')
+          upgradeMessage.setText('No more upgrades');
+          fertText.setText('Fertilzer: $100\n Every click\npicks 2 fruits');
         }
       }
     });
@@ -184,9 +190,10 @@ var config = {
     this.add.text(610, 400, 'Shop', { fontSize: '32px', fill: '#000' });
     //Worker
     worker = this.add.image(720, 500, 'worker').setInteractive();
-    this.add.text(660, 550, 'Worker: $10\n Will pick\nfruit for you', { fontSize: '16px', fill: '#000' });
+    workerText = this.add.text(660, 550, 'Worker: $10\n Will pick\nfruit for you', { fontSize: '16px', fill: '#000' });
     worker.on('pointerdown', function(pointer){
       if(moneyNum>=10){
+        workerText.setText('Worker: BOUGHT\n Is picking\nfruit for you')
         workerOwned=true;
         moneyNum-=10;
         moneyText.setText('$'+moneyNum);
@@ -194,33 +201,41 @@ var config = {
     });
   
     //Fertilizers
-    this.add.text(510, 550, 'Fertilzer: $100\n Every click\npicks 2 fruits', { fontSize: '16px', fill: '#000' });
+    fertText = this.add.text(500, 550, 'Fertilzer: $100\n Every click\npicks 2 fruits', { fontSize: '16px', fill: '#000' });
   
     //If worker is owned, add 1 fruit every 2 seconds
     this.time.addEvent({ delay: 2000, callback: onEvent, callbackScope: this, loop:true});
   
+    pBestText = this.add.text(600, 50, "Personal Best:\n$"+pBest, { fontSize: '24px', fill: '#000' })
     saveText.on('pointerdown', function(pointer){//Database stuff goes here
       //Save, store stuff in db
+      //Change personal best if it's a new high
+      if(moneyNum>pBest){
+        pBest=moneyNum;
+        pBestText.setText("Personal Best:\n$"+pBest);
+      }
     });
   }
   
   function update (){
-    if(currCost==1){
+    if(currCost===1){
       fertilizerApple = this.add.image(570, 495, 'fertilizerApple').setInteractive();
       fertilizerApple.on('pointerdown', function(pointer){
         if(moneyNum>=100){
           fertilizerAppleOwned=true;
           moneyNum-=100;
           moneyText.setText('$'+moneyNum);
+          fertText.setText('Fertilzer: BOUGHT\n Every click\npicks 2 fruits');
         }
       });
-    }else if(currCost==2){
+    }else if(currCost===2){
       fertilizerOrange = this.add.image(570, 495, 'fertilizerOrange').setInteractive();
       fertilizerOrange.on('pointerdown', function(pointer){
         if(moneyNum>=100){
           fertilizerOrangeOwned=true;
           moneyNum-=100;
           moneyText.setText('$'+moneyNum);
+          fertText.setText('Fertilzer: BOUGHT\n Every click\npicks 2 fruits');
         }
       });
     }else{
@@ -230,12 +245,13 @@ var config = {
           fertilizerPeachOwned=true;
           moneyNum-=100;
           moneyText.setText('$'+moneyNum);
+          fertText.setText('Fertilzer: BOUGHT\n Every click\npicks 2 fruits');
         }
       });
     }
   
     //Apple, orange, or peach
-    if(currCost == 1){//score only for testing, should remove eventually
+    if(currCost === 1){//score only for testing, should remove eventually
       fruit = this.add.image(400, 200, 'apple').setInteractive();
       fruit.on('pointerdown', function(pointer){//Increment apples with every touch
         if(fertilizerAppleOwned){
@@ -246,7 +262,7 @@ var config = {
         appleText.setText('Apples: '+appleNum);
       });
       //fruit.setActive(false).setVisible(false);
-    }else if(currCost ==2){
+    }else if(currCost ===2){
       //fruit.setActive(false).setVisible(false);
       fruit = this.add.image(400, 200, 'orange').setInteractive();
       fruit.on('pointerdown', function(pointer){//Increment oranges with every touch
@@ -257,7 +273,7 @@ var config = {
         }
         orangeText.setText('Oranges: '+orangeNum);
       });
-    }else if(currCost == 3){
+    }else if(currCost === 3){
       fruit = this.add.image(400, 200, 'peach').setInteractive();
       fruit.on('pointerdown', function(pointer){//Increment peaches with every touch
         if(fertilizerPeachOwned){
@@ -272,10 +288,10 @@ var config = {
   //worker picking
   function onEvent(){
     if(workerOwned){
-      if(currCost==1){
+      if(currCost===1){
         appleNum++;
         appleText.setText("Apples: "+ appleNum);
-      }else if(currCost==2){
+      }else if(currCost===2){
         orangeNum++;
         orangeText.setText("Oranges: "+ orangeNum);
       }else{
@@ -284,10 +300,15 @@ var config = {
       }
     }
   }
+
+  function start(score){
+    pBest = score;
+    new Phaser.Game(config);
+  }
 function GameDev(props){
     return(
         <div>
-          {new Phaser.Game(config)}
+          {start(props.user)}
         </div>
     )
 }
