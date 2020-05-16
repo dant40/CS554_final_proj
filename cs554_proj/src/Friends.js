@@ -31,12 +31,17 @@ function Friends(props){
     const [chatUID,setChatUID] = useState("")
     const [show, setShow] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
+    const [flag,setFlag] = useState(true)
     useEffect(() => {
         //need to do a db call here to get friends list
         //will harcode a few friends for now.
         //const ls = accounts.get(props.user.username)
-        setFriendList(props.user.friends)
-    },[friendList])
+        if(flag){ 
+            console.log(props.user.friends)
+            setFriendList(props.user.friends)
+            setFlag(false)
+        }
+    },[flag])
 
     function handleClose(){ 
         setChatUID("");
@@ -69,6 +74,7 @@ function Friends(props){
 
     async function addFriend(e,name){
         e.preventDefault();
+        if(!friendList.includes(name)){
         let bod= {"username": props.user.username, "friendName": name}
         const response = await fetch("http://localhost:3001/api/addFriend",{
             method: 'POST',
@@ -79,6 +85,7 @@ function Friends(props){
         })
         const updatedUser = await response.json();
         setFriendList(updatedUser.friends)
+    }
     }
 
     async function removeFriend(e, name){
@@ -92,8 +99,8 @@ function Friends(props){
             body: JSON.stringify(bod)
         })
         const updatedUser = await response.json();
-        setFriendList(updatedUser.friends)
-         
+        if(updatedUser.friends) setFriendList(updatedUser.friends)
+         else setFriendList([])
     }
 
     function createSearchResults(){
@@ -104,7 +111,7 @@ function Friends(props){
                     { searchResults.map( (item) => {
                         if(item.username !== props.user.username)
                         return( 
-                            <Row key = {item.username}>
+                            <Row key = {item}>
                                 <div  className="friend-row">
                                 <Col><div><img className= "profile" src ="http://www.barbalace.it/antonio/photos/abarbala.jpeg" /></div></Col>
                                 <Col><div><p className = "uname">{item.username}</p></div></Col>
@@ -129,11 +136,11 @@ function Friends(props){
                 <h1>My Friends</h1>
                 { friendList.map( (item) => {
                     return( 
-                        <Row key = {item.username}>
+                        <Row key = {item}>
                             <div  className="friend-row">
                             <Col><div><img className= "profile" src ="http://www.barbalace.it/antonio/photos/abarbala.jpeg" /></div></Col>
-                            <Col><div><p className = "uname">{item.username}</p></div></Col>
-                            <Col><div ><Button onClick = {(e) => removeFriend(e,item.username)} variant = "danger">Remove</Button></div></Col>
+                            <Col><div><p className = "uname">{item}</p></div></Col>
+                            <Col><div ><Button onClick = {(e) => removeFriend(e,item)} variant = "danger">Remove</Button></div></Col>
                             </div>
                         </Row>
                         );

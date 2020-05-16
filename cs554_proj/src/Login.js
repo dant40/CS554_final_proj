@@ -43,34 +43,38 @@ function Login(props){
 
     async function handleNormalSignIn(e){
         e.preventDefault();
-        let bod= {"username": username, "password": password}
-        const response = await fetch("http://localhost:3001/api/login",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(bod)
-        })
-        const js = await response.json();
-        //console.log(js)
-        props.onLogin(js); 
+        if(username !== "" && password !== ""){
+            let bod= {"username": username, "password": password}
+            const response = await fetch("http://localhost:3001/api/login",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const js = await response.json();
+            //console.log(js)
+            props.onLogin(js); 
+        }
     }
 
     async function handleNormalCreate(e){
         //const acc = accounts.create(username,password)
         //props.onLogin(acc)
         e.preventDefault();
-        let bod= {"username": username, "password": password}
-        const response = await fetch("http://localhost:3001/api/create",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(bod)
-        })
-        const js = await response.json();
-        //console.log(js)
-        props.onLogin(js); 
+        if(username !== "" && password !== ""){
+            let bod= {"username": username, "password": password}
+            const response = await fetch("http://localhost:3001/api/create",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const js = await response.json();
+            //console.log(js)
+            props.onLogin(js); 
+        }
     }
 
     function createForm(flag){

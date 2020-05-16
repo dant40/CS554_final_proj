@@ -129,6 +129,7 @@ app.post("/api/removeFriend", async (req,res) => {
     try{
         const body = req.body;
         if(body.username && body.friendName){
+             console.log("In mongoserver")
              acc = await accounts.removeFriend(body.username,body.friendName)
              console.log(acc)
         }
