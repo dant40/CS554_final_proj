@@ -34,7 +34,7 @@ function App() {
             {(user !== null) ? <Friends user = {user}/> : <Redirect to ="/"/> }
             </Route>
             <Route exact path="/game">
-              <GameDev></GameDev>
+            <GameDev user = {100}/>: <Redirect to ="/"/>}
             </Route>
             </Switch>
           </div>
