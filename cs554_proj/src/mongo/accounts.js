@@ -37,7 +37,7 @@ const create = async function create(username, password){
 	if(insert.insertedCount == 0)
 		throw new Error("account cannot be created")
 	var insertId = insert.insertedId;
-	var account = await accountsCollection.findOne({_id: insertId});
+	var account = await accountCollection.findOne({_id: insertId});
 	return account;
 }
 
@@ -48,9 +48,13 @@ const createFromGoogleLogin = async function createFromGoogleLogin(username){
 	if(typeof(username) !== "string"){
 		throw new Error("username is not of type string");
 	}
+
+	//let hashPassword = await bcrypt.hash(password, 16);
+
 	var accountsCollection = await accounts();
 	let usernameExists = await accountsCollection.findOne({username: username});
 	if(usernameExists !== null){
+		throw new Error("username has been taken");
 		return;
 	}
 
@@ -66,9 +70,10 @@ const createFromGoogleLogin = async function createFromGoogleLogin(username){
 	if(insert.insertedCount == 0)
 		throw new Error("account cannot be created")
 	var insertId = insert.insertedId;
-	var account = await accountsCollection.findOne({_id: insertId});
+	var account = await accountCollection.findOne({_id: insertId});
 	return account;
 }
+
 
 const login = async function login(username, password){
 	if(username == undefined){
@@ -96,6 +101,8 @@ const login = async function login(username, password){
 
 }
 
+
+
 const get = async function get(username){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -110,6 +117,16 @@ const get = async function get(username){
 	}
 	return usernameExists;
 }
+
+const getSearch = async function getAll(term){
+	
+	var accountsCollection = await accounts();
+	//console.log(term)
+	let users = await accountsCollection.find({"username" : {$regex : ".*" + term+ ".*"}}).toArray();
+	//console.log(users)
+	return users;
+}
+
 
 const changeUsername = async function changeUsername(old, newuser, password){
 	if(old == undefined){
@@ -223,6 +240,7 @@ const addFriend = async function addFriend(username, friend){
 }
 
 const removeFriend = async function removeFriend(username, friend){
+	
 	if(username == undefined){
 		throw new Error("username is not defined");
 	}
@@ -246,13 +264,40 @@ const removeFriend = async function removeFriend(username, friend){
 		throw new Error("cannot add friend: no account with that username");
 		return;
 	}
-	let friends = usernameExists.friends;
-	friends = friends.filter(e => e !== friend);
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: friends}});
+	let f = usernameExists.friends;
+	f = f.filter(e => e !== friend); 
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: f}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update password");
 	}
 	return await get(username);
 }
 
-module.exports = {create,createFromGoogleLogin , get, login, changeUsername, changePassword, addFriend, removeFriend};
+const updateScore = async function updateScore(username, score){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	if(score == undefined){
+		throw new Error("score is not defined");
+	}
+	if(typeof(score) !== "number"){
+		throw new Error("score is not of type number");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists == null){
+		throw new Error("no account with that username");
+		return;
+	}
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: score, itemsInventory: usernameExists.itemsInventory, friends: usernameExists.friends}});
+	if(updated.modifiedCount == 0){
+		throw new Error("could not update score");
+	}
+	return await get(username);
+
+}
+
+module.exports = {create,createFromGoogleLogin , get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend,updateScore};

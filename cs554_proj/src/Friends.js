@@ -10,19 +10,19 @@ import './Friends.css';
 import ChatGUI from "./chatStuff/ChatGUI"
 //import * as accounts from "./mongo/accounts";
 //these ids will be used for our comet chat ids too
-const friends = [{
-    _id: "1",
-    username: "SafariDan",
-    email: "s@s",
-    profilePic: "",
-    friendsList: []
-}, {
-    _id: "2",
-    username: "Myon",
-    email: "m@m",
-    profilePic: "",
-    friendsList: []
-}]
+// const friends = [{
+//     _id: "1",
+//     username: "SafariDan",
+//     email: "s@s",
+//     profilePic: "",
+//     friendsList: []
+// }, {
+//     _id: "2",
+//     username: "Myon",
+//     email: "m@m",
+//     profilePic: "",
+//     friendsList: []
+// }]
 
 
 
@@ -31,12 +31,17 @@ function Friends(props){
     const [chatUID,setChatUID] = useState("")
     const [show, setShow] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
+    const [flag,setFlag] = useState(true)
     useEffect(() => {
         //need to do a db call here to get friends list
         //will harcode a few friends for now.
         //const ls = accounts.get(props.user.username)
-        setFriendList(friends)
-    },[friendList])
+        if(flag){ 
+            console.log(props.user.friends)
+            setFriendList(props.user.friends)
+            setFlag(false)
+        }
+    },[flag])
 
     function handleClose(){ 
         setChatUID("");
@@ -51,23 +56,77 @@ function Friends(props){
 
     //will be used as the way to add friends 
     //can search by username, obviously will need db stuff here too
-    function searchUsers(value){
-        //make a getAllUsers function in db
-        //setSearchResults(response)
+    async function searchUsers(e,searchTerm){
+        //console.log(searchTerm)
+        e.preventDefault();
+        let bod= {"searchTerm": searchTerm}
+        const response = await fetch("http://localhost:3001/api/getSearch",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(bod)
+        })
+        const searchRes = await response.json();
+        setSearchResults(searchRes);
+
     }
 
-    function addFriend(username){
-        //const acc = accounts.addFriend(prop.user.username)
-        //setFriendList(acc.friends)
+    async function addFriend(e,name){
+        e.preventDefault();
+        if(!friendList.includes(name)){
+        let bod= {"username": props.user.username, "friendName": name}
+        const response = await fetch("http://localhost:3001/api/addFriend",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(bod)
+        })
+        const updatedUser = await response.json();
+        setFriendList(updatedUser.friends)
+    }
     }
 
-    function removeFriend(e, name){
-        //make a remove friend function in accounts
-         //setFriendList(acc.friends)
+    async function removeFriend(e, name){
+         e.preventDefault();
+         let bod= {"username": props.user.username, "friendName": name}
+        const response = await fetch("http://localhost:3001/api/removeFriend",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(bod)
+        })
+        const updatedUser = await response.json();
+        if(updatedUser.friends) setFriendList(updatedUser.friends)
+         else setFriendList([])
     }
 
     function createSearchResults(){
-        
+        try{
+            return( 
+                <Container>
+                    <h2>Search Results</h2>
+                    { searchResults.map( (item) => {
+                        if(item.username !== props.user.username)
+                        return( 
+                            <Row key = {item}>
+                                <div  className="friend-row">
+                                <Col><div><img className= "profile" src ="http://www.barbalace.it/antonio/photos/abarbala.jpeg" /></div></Col>
+                                <Col><div><p className = "uname">{item.username}</p></div></Col>
+                                <Col><div ><Button onClick = {(e) => addFriend(e,item.username)} variant = "secondary">Add</Button></div></Col>
+                                </div>
+                            </Row>
+                            );
+                        })
+                    }
+                </Container> 
+                
+                )
+        }catch(e){
+            return
+        }
     }
 
     function createFriendsList(){
@@ -77,11 +136,11 @@ function Friends(props){
                 <h1>My Friends</h1>
                 { friendList.map( (item) => {
                     return( 
-                        <Row key = {item._id}>
+                        <Row key = {item}>
                             <div  className="friend-row">
                             <Col><div><img className= "profile" src ="http://www.barbalace.it/antonio/photos/abarbala.jpeg" /></div></Col>
-                            <Col><div><p className = "uname">{item.username}</p></div></Col>
-                            <Col><div ><Button onClick = {(e) => removeFriend(e,item.username)} variant = "danger">Remove</Button></div></Col>
+                            <Col><div><p className = "uname">{item}</p></div></Col>
+                            <Col><div ><Button onClick = {(e) => removeFriend(e,item)} variant = "danger">Remove</Button></div></Col>
                             </div>
                         </Row>
                         );
@@ -104,8 +163,8 @@ function Friends(props){
                 <Form>
                     <Form.Group>
                     <Form.Control
-                    placeholder = "Enter a username to search"
-                    onChange={(e) => searchUsers(e.target.value)}
+                        placeholder = "Enter a username to search"
+                        onChange={(e) => searchUsers(e,e.target.value)}
                     />
                     </Form.Group>
                 </Form>

@@ -61,6 +61,21 @@ app.get("/api/get", async (req,res) => {
     return res.json(acc)
 })
 
+app.post("/api/getSearch", async (req,res) => {
+    var acc = {};
+    try{
+        const body = req.body;
+        if(body.searchTerm) acc = await accounts.getSearch(body.searchTerm)           
+        
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+
 app.post("/api/changeUsername", async (req,res) => {
     var acc ={"formatting issue" :"your json was bad!"};
     try{
@@ -114,8 +129,24 @@ app.post("/api/removeFriend", async (req,res) => {
     try{
         const body = req.body;
         if(body.username && body.friendName){
+             
              acc = await accounts.removeFriend(body.username,body.friendName)
-             console.log(acc)
+            
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+app.post("/api/save", async (req,res) => {
+    var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.score){        
+             acc = await accounts.updateScore(body.username,body.score)
         }
     }catch(e){
         console.log(e)
