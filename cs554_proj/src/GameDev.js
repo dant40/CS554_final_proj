@@ -43,7 +43,7 @@ var config = {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('tree', 'assets/tree.png');
-    this.load.image('apple', 'assets/apple.jpg');
+    this.load.image('apple', 'assets/apple.png');
     this.load.image('orange', 'assets/orange.png');
     this.load.image('peach', 'assets/peach.png');
     this.load.image('plus', 'assets/plus.png');
