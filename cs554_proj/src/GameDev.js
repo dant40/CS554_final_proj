@@ -195,7 +195,6 @@ var config = {
     workerText = this.add.text(660, 550, 'Worker: $10\n Will pick\nfruit for you', { fontSize: '16px', fill: '#000' });
     worker.on('pointerdown', function(pointer){
       if(moneyNum>=10){
-        workerText.setText('Worker: BOUGHT\n Is picking\nfruit for you')
         workerOwned=true;
         workerNum++;
         moneyNum-=10;
