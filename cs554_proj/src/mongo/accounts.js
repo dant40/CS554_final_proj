@@ -121,7 +121,9 @@ const get = async function get(username){
 const getSearch = async function getAll(term){
 	
 	var accountsCollection = await accounts();
-	let users = await accountsCollection.find({username: term}, {username: 1});
+	//console.log(term)
+	let users = await accountsCollection.find({"username" : {$regex : ".*" + term+ ".*"}}).toArray();
+	//console.log(users)
 	return users;
 }
 

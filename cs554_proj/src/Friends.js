@@ -102,6 +102,7 @@ function Friends(props){
                 <Container>
                     <h2>Search Results</h2>
                     { searchResults.map( (item) => {
+                        if(item.username !== props.user.username)
                         return( 
                             <Row key = {item.username}>
                                 <div  className="friend-row">
