@@ -10,17 +10,26 @@ import {
   } from "react-router-dom";
 
 function TopBar(){
-    return(<Navbar className="justify-content-center" fixed="top" bg="dark" variant="dark">
-      <NavItem className="navListItem">
-        <Nav.Link as={Link} to="/" > 
-          Home
-        </Nav.Link>
-      </NavItem>
-      <NavItem className="navListItem">
-        <Nav.Link as={Link} to="/friends" >
-          Friends
-        </Nav.Link>
-      </NavItem>
-    </Navbar>)
+    return(
+      <div>
+        <Navbar className="justify-content-center" fixed="top" bg="dark" variant="dark">
+          <NavItem className="navListItem">
+            <Nav.Link as={Link} to="/" > 
+              Home
+            </Nav.Link>
+          </NavItem>
+          <NavItem className="navListItem">
+            <Nav.Link as={Link} to="/friends" >
+              Friends
+            </Nav.Link>
+          </NavItem>
+          <NavItem className="navListItem">
+            <Nav.Link as={Link} to="/game" >
+              Game
+            </Nav.Link>
+          </NavItem>
+        </Navbar>
+    </div>
+    )
 }
 export default TopBar

@@ -85,9 +85,9 @@ function Friends(props){
     return(
         <div>
             <TopBar></TopBar>
-            
+        
             {createFriendsList()}
-            <div><Button onClick = {() => handleShow()} variant = "primary">Open Global Chat</Button></div>
+            <div><Button onClick = {() => handleShow()} variant = "primary" size="lg">Open Global Chat</Button></div>
             {/* chat logic will all go inside this modal */}
             <Modal scrollable show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
