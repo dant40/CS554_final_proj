@@ -29,7 +29,7 @@ function Login(props){
                         body: JSON.stringify(bod)
                     })
                     const js = await response.json();
-                    console.log(js)
+                    //console.log(js)
                     props.onLogin(js); 
 
                     //const acc =accounts.createFromGoogleLogin(result.user.displayName)
@@ -52,7 +52,7 @@ function Login(props){
             body: JSON.stringify(bod)
         })
         const js = await response.json();
-        console.log(js)
+        //console.log(js)
         props.onLogin(js); 
     }
 
@@ -69,7 +69,7 @@ function Login(props){
             body: JSON.stringify(bod)
         })
         const js = await response.json();
-        console.log(js)
+        //console.log(js)
         props.onLogin(js); 
     }
 

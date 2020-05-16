@@ -111,6 +111,14 @@ const get = async function get(username){
 	return usernameExists;
 }
 
+const getSearch = async function getAll(term){
+	
+	var accountsCollection = await accounts();
+	let users = await accountsCollection.find({username: term}, {username: 1});
+	return users;
+}
+
+
 const changeUsername = async function changeUsername(old, newuser, password){
 	if(old == undefined){
 		throw new Error("old username is not defined");
@@ -255,4 +263,4 @@ const removeFriend = async function removeFriend(username, friend){
 	return await get(username);
 }
 
-module.exports = {create,createFromGoogleLogin , get, login, changeUsername, changePassword, addFriend, removeFriend};
+module.exports = {create,createFromGoogleLogin , get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend};

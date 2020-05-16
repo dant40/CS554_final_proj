@@ -61,6 +61,21 @@ app.get("/api/get", async (req,res) => {
     return res.json(acc)
 })
 
+app.post("/api/getSearch", async (req,res) => {
+    var acc = {};
+    try{
+        const body = req.body;
+        if(body.searchTerm) acc = await accounts.getSearch(body.searchTerm)           
+        
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+
+    return res.json(acc)
+})
+
+
 app.post("/api/changeUsername", async (req,res) => {
     var acc ={"formatting issue" :"your json was bad!"};
     try{
