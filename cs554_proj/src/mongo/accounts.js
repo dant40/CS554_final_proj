@@ -283,7 +283,8 @@ const updateScore = async function updateScore(username, score){
 	if(score == undefined){
 		throw new Error("score is not defined");
 	}
-	if(typeof(score) !== "number"){
+	score = Number(score);
+	if(isNaN(score)){
 		throw new Error("score is not of type number");
 	}
 	var accountsCollection = await accounts();
@@ -300,4 +301,4 @@ const updateScore = async function updateScore(username, score){
 
 }
 
-module.exports = {create,createFromGoogleLogin , get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend,updateScore};
+module.exports = {create,createFromGoogleLogin , get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend, updateScore};

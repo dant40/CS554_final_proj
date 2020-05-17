@@ -60,7 +60,7 @@ var config = {
     this.load.image('fertilizerPeach', 'assets/fertilizerPeach.png');
   }
   
-  function create ()
+  async function create ()
   {
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
@@ -214,10 +214,30 @@ var config = {
       //Save, store stuff in db
       //Change personal best if it's a new high
       if(moneyNum>pBest){
-        pBest=moneyNum;
-        pBestText.setText("Personal Best:\n$"+pBest);
+        updateScore();
       }
     });
+  }
+
+  async function updateScore(){
+    if(moneyNum>pBest){
+      pBest=moneyNum;
+      pBestText.setText("Personal Best:\n$"+pBest);
+      console.log("test");
+
+      let bod = {"username": username, "score": pBest};
+      const response = await fetch("http://localhost:3001/api/updateScore",{
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+              },
+          body: JSON.stringify(bod)
+      });
+      //pBestText.setText(""+bod);
+      const updatedUser = await response.json();
+      console.log(bod);
+      
+    }
   }
   
   function update (){

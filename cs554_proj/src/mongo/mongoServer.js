@@ -156,6 +156,21 @@ app.post("/api/save", async (req,res) => {
     return res.json(acc)
 })
 
+app.post("/api/updateScore", async(req,res) =>{
+    var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.score){
+             acc = await accounts.updateScore(body.username,body.score)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+    return res.json(acc)
+})
+
 app.get("/*", async (req,res) => {
     return res.status(404).json({error: "nice try kiddo"})
 })
