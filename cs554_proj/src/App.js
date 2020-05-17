@@ -21,7 +21,7 @@ function App() {
     async function refreshHandler(){
       if(localStorage.getItem("username") && user === null){
         let bod= {"username":localStorage.getItem("username")}
-        const response = await fetch("http://localhost:3001/api/get",{
+        const response = await fetch("https://cors-anywhere.herokuapp.com/api/get",{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

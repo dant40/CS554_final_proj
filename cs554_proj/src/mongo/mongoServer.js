@@ -15,11 +15,11 @@ var storage = multer.diskStorage({
     cb(null, './public/images');
   },
   filename: function (req, file, cb) {
-    cb(null, "image" +  path.extname(file.originalname));
+    cb(null, "image" +  file.originalname);
   }
 });
 
-var upload = multer({ storage: storage });
+var upload = multer({ storage: storage }).single('file');
 app.use(express.json())
 //in the essence of time, these mongo routes are just wrappers and don't do
 //much error checking, they expect things to be well formed
@@ -209,29 +209,18 @@ app.get("/api/getPhoto", async function (req,res){
     return res.json(acc)
 })
 
-app.post('/api/uploadNewPhoto', upload.single('image'), async (req, res) => {
+app.post('/api/uploadNewPhoto', async (req, res) => {
   var img = fs.readFileSync(req.file.path);
   var encode_image = img.toString('base64');
   // Define a JSONobject for the image attributes for saving to database
-  
-  var finalImg = {
-    contentType: req.file.mimetype,
-    image:  new Buffer.from(encode_image, 'base64'),
-    name: req.body.username,
-    description: req.body.username + " profile photo",
-    filepath: "public/images/" + req.body.username + ".jpg"
-  };
-
-  var changeName = await jimp.read("public/images/image.jpg");
-  changeName.write(finalImg.filepath);
-
-  var photosCollection = await photos();
-  var insert = await photosCollection.insertOne(finalImg);
-  if(insert.insertedCount == 0){
-      throw new Error("account cannot be created")
-  }
-  var pfp = await accounts.uploadNewPhoto(req.body.username, finalImg.filepath);
-  return pfp;
+    upload(req.body, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+    return res.status(200).send(req.file)
+    })
 });
 
 app.get("/*", async (req,res) => {
