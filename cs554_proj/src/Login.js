@@ -45,26 +45,34 @@ function Login(props) {
           //props.onLogin(acc)
         });
     } catch (e) {
-      console.log(e);
+      window.alert("Something went wrong! Please try again later.")
     }
   }
 
   async function handleNormalSignIn(e) {
     e.preventDefault();
     if (username !== "" && password !== "") {
-      let bod = { username: username, password: password };
-      const response = await fetch("http://localhost:3001/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bod),
-      });
-      const js = await response.json();
-      //console.log(js)
-      if (js.username) {
-        window.localStorage.setItem("username", js.username);
-        props.onLogin(js);
+      try{
+        let bod = { username: username, password: password };
+        const response = await fetch("http://localhost:3001/api/login", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bod),
+        });
+        const js = await response.json();
+        //console.log(js)
+        if(response.status === 400){
+            window.alert("Invalid login information")
+        }
+
+        if (js.username) {
+            window.localStorage.setItem("username", js.username);
+            props.onLogin(js);
+        }
+      }catch(e){
+        window.alert("Something went wrong! Please try again later.")
       }
     }
   }
@@ -74,19 +82,23 @@ function Login(props) {
     //props.onLogin(acc)
     e.preventDefault();
     if (username !== "" && password !== "") {
-      let bod = { username: username, password: password };
-      const response = await fetch("http://localhost:3001/api/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bod),
-      });
-      const js = await response.json();
-      //console.log(js)
-      if (js.username) {
-        window.localStorage.setItem("username", js.username);
-        props.onLogin(js);
+      try{
+        let bod = { username: username, password: password };
+        const response = await fetch("http://localhost:3001/api/create", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bod),
+        });
+        const js = await response.json();
+        //console.log(js)
+        if (js.username) {
+            window.localStorage.setItem("username", js.username);
+            props.onLogin(js);
+        }
+      }catch(e){
+        window.alert("Something went wrong! Please try again later.")
       }
     }
   }

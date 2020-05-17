@@ -54,34 +54,42 @@ function Home(props){
     async function handleModal(e,url){
         e.preventDefault();
         if(url === "changeUsername"){
-            if(newUsername !== "" && password !== ""){
-                let bod= {"username": user.username,"newUsername": newUsername , "password": password}
-                const response = await fetch("http://localhost:3001/api/"+url,{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                        },
-                    body: JSON.stringify(bod)
-                })
-                const js = await response.json();
-                localStorage.setItem("username",newUsername);
-                setUser(js)
-                location.reload(true)
+            try{
+                if(newUsername !== "" && password !== ""){
+                    let bod= {"username": user.username,"newUsername": newUsername , "password": password}
+                    const response = await fetch("http://localhost:3001/api/"+url,{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                            },
+                        body: JSON.stringify(bod)
+                    })
+                    const js = await response.json();
+                    localStorage.setItem("username",newUsername);
+                    setUser(js)
+                    location.reload(true)
+                }
+            }catch(e){
+                window.alert("Something went wrong! Please try again later.")
             }
         }
         else if(url === "changePassword"){
-            if(newPassword !== "" && password !== ""){
-                let bod= {"username": user.username,"newPassword": newPassword , "password": password}
-                const response = await fetch("http://localhost:3001/api/"+url,{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                        },
-                    body: JSON.stringify(bod)
-                })
-                const js = await response.json();
-                location.reload(true);
-        }
+            try{
+                if(newPassword !== "" && password !== ""){
+                    let bod= {"username": user.username,"newPassword": newPassword , "password": password}
+                    const response = await fetch("http://localhost:3001/api/"+url,{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                            },
+                        body: JSON.stringify(bod)
+                    })
+                    const js = await response.json();
+                    location.reload(true);
+                }
+            }catch(e){
+                window.alert("Something went wrong! Please try again later.")
+            }
         
         }
     }

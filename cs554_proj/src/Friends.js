@@ -59,48 +59,60 @@ function Friends(props){
     async function searchUsers(e,searchTerm){
         //console.log(searchTerm)
         e.preventDefault();
-        let bod= {"searchTerm": searchTerm}
-        const response = await fetch("http://localhost:3001/api/getSearch",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(bod)
-        })
-        const searchRes = await response.json();
-        setSearchResults(searchRes);
+        try{
+            let bod= {"searchTerm": searchTerm}
+            const response = await fetch("http://localhost:3001/api/getSearch",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const searchRes = await response.json();
+            setSearchResults(searchRes);
+        }catch(e){
+            
+        }
 
     }
 
     async function addFriend(e,name){
         e.preventDefault();
-        if(!friendList.includes(name)){
-        let bod= {"username": props.user.username, "friendName": name}
-        const response = await fetch("http://localhost:3001/api/addFriend",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(bod)
-        })
-        const updatedUser = await response.json();
-        setFriendList(updatedUser.friends)
-    }
+        try{
+            if(!friendList.includes(name)){
+            let bod= {"username": props.user.username, "friendName": name}
+            const response = await fetch("http://localhost:3001/api/addFriend",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const updatedUser = await response.json();
+            setFriendList(updatedUser.friends)
+            }   
+        }catch(e){
+            window.alert("Something went wrong! Please try again later.")
+        }
     }
 
     async function removeFriend(e, name){
          e.preventDefault();
-         let bod= {"username": props.user.username, "friendName": name}
-        const response = await fetch("http://localhost:3001/api/removeFriend",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(bod)
-        })
-        const updatedUser = await response.json();
-        if(updatedUser.friends) setFriendList(updatedUser.friends)
-         else setFriendList([])
+        try{ 
+            let bod= {"username": props.user.username, "friendName": name}
+            const response = await fetch("http://localhost:3001/api/removeFriend",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const updatedUser = await response.json();
+            if(updatedUser.friends) setFriendList(updatedUser.friends)
+            else setFriendList([])
+        }catch(e){
+            window.alert("Something went wrong! Please try again later.")
+        }
     }
 
     function createSearchResults(){
