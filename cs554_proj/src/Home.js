@@ -3,6 +3,11 @@ import Button from 'react-bootstrap/Button';
 import TopBar from "./TopBar";
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import profilePic from "./Form.js";
+import {
+  Link,
+} from "react-router-dom";
+
 function Home(props){
     const [user,setUser] = useState(props.user)
     const [show,setShow] = useState(false)
@@ -166,9 +171,11 @@ function Home(props){
         <div className = "webpage">
             <TopBar></TopBar>
             <h1 style={{marginTop: "150px"}}>Welcome {props.user.username}</h1>
+            <img src = {props.user.profilePic} alt="profile picture"></img>
             <Button variant ="secondary" onClick = {() => handleChangeUsername()}>Change Username</Button>
             <Button variant ="secondary" onClick = {() => handleChangePassword()}>Change Password</Button>
             <Button variant ="secondary" onClick = {(e) => handleLogout(e)}>Logout</Button>
+            <Link to='/pp'>Change Profile Picture</Link>
             <Modal scrollable show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>Edit Profile</Modal.Title>

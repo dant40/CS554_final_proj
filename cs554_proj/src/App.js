@@ -50,7 +50,7 @@ function App() {
               )}
             </Route>
             <Route exact path="/pp">
-              <Form user={"alex"}></Form>
+              <Form user={user} onProfilePicChange = {setUser}></Form>
             </Route>
             <Route exact path="/friends">
               {user !== null ? <Friends user={user} /> : <Redirect to="/" />}

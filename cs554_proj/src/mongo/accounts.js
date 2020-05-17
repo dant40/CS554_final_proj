@@ -342,9 +342,10 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 	}
 
 	//im.identify(newPhoto);
+	let newPhotoURL = newPhoto.substring(0, newPhoto.length()-4) + "2.jpg"
 	gm(newPhoto)//This doesn't work for some reason
 	.resize(100,100)
-	.write('../../public/images/pfp/'+username+'.jpg',function(err){
+	.write(newPhotoURL,function(err){
 		if(err) console.log(err)
 		console.log("conversion completed")
 	}) 
