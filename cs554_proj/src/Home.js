@@ -14,6 +14,7 @@ function Home(props){
     const [image, setImage] = useState(null);
 
     async function handleSubmit(e){
+        let bod = {"username": "jason", "score": 2};
         e.preventDefault();
         //let bod = {"username": user.username, "image": }
         const response = await fetch("http://localhost:3001/api/uploadNewPhoto", {
@@ -21,12 +22,13 @@ function Home(props){
             headers: {
                 'Content-Type': 'application/json'
               },
-            body: {}
+            body: JSON.stringify(image)
         });  
     }
     const onChange = (e) => {
         console.log(e.target.files[0])
         setImage(e.target.files[0]);
+        console.log(typeof image);
       }
 
     function handleLogout(e){
