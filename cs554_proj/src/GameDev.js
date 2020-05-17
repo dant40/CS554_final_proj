@@ -37,6 +37,7 @@ var config = {
   var pBestText;
   var workerText;
   var fertText;
+  var username;
   
   
   function preload ()
@@ -324,14 +325,17 @@ var config = {
     }
   }
 
-  function start(score){
+  function start(score, user){
     pBest = score;
+    username = user;
     new Phaser.Game(config);
   }
 function GameDev(props){
     return(
         <div>
-          {start(props.user)}
+          {start(props.user.score, props.user.username)}
+          <p>{props.user.score}</p>
+          <p>{props.user.username}</p>
         </div>
     )
 }
