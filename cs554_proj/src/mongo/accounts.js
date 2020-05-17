@@ -301,7 +301,7 @@ const updateScore = async function updateScore(username, score){
 
 }
 
-const getPhoto = async function getPhoto(username){
+/* const getPhoto = async function getPhoto(username){
 	if(username == undefined){
 		throw new Error("username is not defined");
 	}
@@ -317,11 +317,11 @@ const getPhoto = async function getPhoto(username){
 		.resize(100,100)
 		.write('../../public/image/pfp/'+username+'.jpg',function(err){
 			if(err) console.log(err)
-			consolge.log("conversion completed")
+			console.log("conversion completed")
 		})
 	return "../../public/image/pfp/"+username+".jpg";	
 }
-
+ */
 const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -339,14 +339,18 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 	let usernameExists = await accountsCollection.findOne({username: username});
 	if(usernameExists == null){
 		throw new Error("no account with that username");
-		return;
 	}
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: newPhoto}});
+	gm(usernameExists.profilePic)
+		.resize(100,100)
+		.write('../../public/image/pfp/'+username+'.jpg',function(err){
+			if(err) console.log(err)
+			consolge.log("conversion completed")
+		})
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: "../../public/image/pfp/"+username+".jpg"}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update profile photo");
 	}
 	return await get(username);
-
 }
 
-module.exports = {create, createFromGoogleLogin, get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend, updateScore, getPhoto, uploadNewPhoto};
+module.exports = {create, createFromGoogleLogin, get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend, updateScore, uploadNewPhoto};

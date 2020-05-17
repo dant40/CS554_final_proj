@@ -174,7 +174,7 @@ app.post("/api/updateScore", async(req,res) =>{
 
 // @route GET /
 // @desc Loads form
-app.get("/api/getPhoto", async function (req,res){
+/* app.get("/api/getPhoto", async function (req,res){
   var acc ={"Formatting issue" :"your json was bad!"};
     try{
         const body = req.body;
@@ -187,7 +187,7 @@ app.get("/api/getPhoto", async function (req,res){
         return res.status(400).json({error: e})
     }
     return res.json(acc)
-})
+}) */
 
 app.post('/api/uploadNewPhoto', async (req, res) => {
   var acc ={"Formatting issue" :"your json was bad!"};
