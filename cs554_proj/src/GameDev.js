@@ -348,8 +348,7 @@ function update() {
   }
 
   //Apple, orange, or peach
-  if (currCost === 1) {
-    //score only for testing, should remove eventually
+  if (currCost >= 1) {
     fruit = this.add.image(400, 200, "apple").setInteractive();
     fruit.on("pointerdown", function (pointer) {
       //Increment apples with every touch
@@ -361,7 +360,8 @@ function update() {
       appleText.setText("Apples: " + appleNum);
     });
     //fruit.setActive(false).setVisible(false);
-  } else if (currCost === 2) {
+  }
+  if (currCost >= 2) {
     //fruit.setActive(false).setVisible(false);
     fruit = this.add.image(200, 250, "orange").setInteractive();
     fruit.on("pointerdown", function (pointer) {
@@ -373,7 +373,8 @@ function update() {
       }
       orangeText.setText("Oranges: " + orangeNum);
     });
-  } else if (currCost === 3) {
+  } 
+   if (currCost >= 3) {
     fruit = this.add.image(620, 270, "peach").setInteractive();
     fruit.on("pointerdown", function (pointer) {
       //Increment peaches with every touch
