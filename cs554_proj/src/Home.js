@@ -11,6 +11,23 @@ function Home(props){
     const [newUsername,setNewUsername] = useState("")
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
+    const [image, setImage] = useState(null);
+
+    async function handleSubmit(e){
+        e.preventDefault();
+        //let bod = {"username": user.username, "image": }
+        const response = await fetch("http://localhost:3001/api/uploadNewPhoto", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            body: {}
+        });  
+    }
+    const onChange = (e) => {
+        console.log(e.target.files[0])
+        setImage(e.target.files[0]);
+      }
 
     function handleLogout(e){
         e.preventDefault();
@@ -135,8 +152,9 @@ function Home(props){
     return(
         <div>
             <TopBar></TopBar>
-            <h1 style={{marginTop: "150px"}}>Welcome {user.username}</h1>
-            <form action="/api/uploadNewPhoto" enctype="multipart/form-data" method="POST"> 
+            <h1 style={{marginTop: "150px"}}>Welcome {props.user.username}</h1>
+
+            <form onSubmit={async(e) => handleSubmit(e)} onChange = {onChange}> 
 			   <input type="file" name="image" accept="image/*" required/>
 			   <input type="submit" value="Upload a file"/>
 			</form>
