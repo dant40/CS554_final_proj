@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Phaser from "phaser";
 import TopBar from "./TopBar";
-
 
 var config = {
   type: Phaser.CANVAS,
@@ -244,7 +243,7 @@ async function create() {
   //Worker
   worker = this.add.image(720, 500, "worker").setInteractive();
   workerText = this.add.text(
-    660,
+    665,
     550,
     "Worker: $10\n Will pick\nfruit for you",
     { fontSize: "16px", fill: "#000" }
@@ -409,6 +408,7 @@ function start(score, user) {
   new Phaser.Game(config);
 }
 function GameDev(props) {
+ 
   return <div>
       <TopBar></TopBar>
       {start(props.user.score, props.user.username)}

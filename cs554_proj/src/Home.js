@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import TopBar from "./TopBar";
 import Modal from 'react-bootstrap/Modal'
@@ -12,6 +12,16 @@ function Home(props){
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
     
+    useEffect( () => {
+        try{
+            
+            document.getElementsByTagName('canvas')[0].remove()
+        }catch(e){
+            console.log(e)
+        }
+
+    })
+
     function handleLogout(e){
         e.preventDefault();
         try{

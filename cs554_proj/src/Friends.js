@@ -33,6 +33,9 @@ function Friends(props){
     const [searchResults, setSearchResults] = useState([]);
     const [flag,setFlag] = useState(true)
     useEffect(() => {
+        try{
+            document.getElementsByTagName('canvas')[0].remove()
+        }catch(e){}
         //need to do a db call here to get friends list
         //will harcode a few friends for now.
         //const ls = accounts.get(props.user.username)
