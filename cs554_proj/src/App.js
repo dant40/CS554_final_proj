@@ -8,6 +8,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./Login";
 import Home from "./Home";
 import GameDev from "./GameDev";
