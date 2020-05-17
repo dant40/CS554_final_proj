@@ -1,6 +1,25 @@
 const accounts = require("./accounts")
 const express = require("express");
 const app = express();
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const jimp = require('jimp');
+const mongoCollections = require("./collection");
+const photos = mongoCollections.photos;
+
+
+// SET STORAGE
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, "image" +  path.extname(file.originalname));
+  }
+});
+
+var upload = multer({ storage: storage });
 app.use(express.json())
 //in the essence of time, these mongo routes are just wrappers and don't do
 //much error checking, they expect things to be well formed
@@ -170,6 +189,51 @@ app.post("/api/updateScore", async(req,res) =>{
     }
     return res.json(acc)
 })
+
+// @route GET /
+// @desc Loads form
+app.get("/api/getPhoto", async function (req,res){
+  var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username){
+             url = await accounts.getPhoto(body.username);
+             var photosCollection = await photos();
+             acc = await photosCollection.findOne({filepath: url});
+             //console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+    return res.json(acc)
+});
+
+app.post('/api/uploadNewPhoto', upload.single('image'), async (req, res) => {
+  var img = fs.readFileSync(req.file.path);
+  var encode_image = img.toString('base64');
+  // Define a JSONobject for the image attributes for saving to database
+  
+  var finalImg = {
+    contentType: req.file.mimetype,
+    image:  new Buffer.from(encode_image, 'base64'),
+    name: req.body.username,
+    description: req.body.username + " profile photo",
+    filepath: "public/images/" + req.body.username + ".jpg"
+  };
+
+  var changeName = await jimp.read("public/images/image.jpg");
+  changeName.write(finalImg.filepath);
+
+  var photosCollection = await photos();
+  var insert = await photosCollection.insertOne(finalImg);
+  if(insert.insertedCount == 0){
+      throw new Error("account cannot be created")
+  }
+  var pfp = await accounts.uploadNewPhoto(req.body.username, finalImg.filepath);
+  return pfp;
+
+}
 
 app.get("/*", async (req,res) => {
     return res.status(404).json({error: "nice try kiddo"})

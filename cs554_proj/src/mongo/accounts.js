@@ -29,8 +29,8 @@ const create = async function create(username, password){
 		"username": username,
 		"password": hashPassword,
 		"score": 0,
-		"itemsInventory": [0,0,0],
-		"friends": []
+		"friends": [],
+		"profilePic": '../../public/images/default.jpg'
 	}
 
 	var insert = await accountsCollection.insertOne(newAccount);
@@ -40,40 +40,6 @@ const create = async function create(username, password){
 	var account = await accountCollection.findOne({_id: insertId});
 	return account;
 }
-
-const createFromGoogleLogin = async function createFromGoogleLogin(username){
-	if(username == undefined){
-		throw new Error("username is not defined");
-	}
-	if(typeof(username) !== "string"){
-		throw new Error("username is not of type string");
-	}
-
-	//let hashPassword = await bcrypt.hash(password, 16);
-
-	var accountsCollection = await accounts();
-	let usernameExists = await accountsCollection.findOne({username: username});
-	if(usernameExists !== null){
-		throw new Error("username has been taken");
-		return;
-	}
-
-	var newAccount = {
-		"username": username,
-		"password": "",
-		"score": 0,
-		"itemsInventory": [0,0,0],
-		"friends": []
-	}
-
-	var insert = await accountsCollection.insertOne(newAccount);
-	if(insert.insertedCount == 0)
-		throw new Error("account cannot be created")
-	var insertId = insert.insertedId;
-	var account = await accountCollection.findOne({_id: insertId});
-	return account;
-}
-
 
 const login = async function login(username, password){
 	if(username == undefined){
@@ -101,8 +67,6 @@ const login = async function login(username, password){
 
 }
 
-
-
 const get = async function get(username){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -117,16 +81,6 @@ const get = async function get(username){
 	}
 	return usernameExists;
 }
-
-const getSearch = async function getAll(term){
-	
-	var accountsCollection = await accounts();
-	//console.log(term)
-	let users = await accountsCollection.find({"username" : {$regex : ".*" + term+ ".*"}}).toArray();
-	//console.log(users)
-	return users;
-}
-
 
 const changeUsername = async function changeUsername(old, newuser, password){
 	if(old == undefined){
@@ -162,7 +116,7 @@ const changeUsername = async function changeUsername(old, newuser, password){
 		throw new Error("that username has already been taken");
 		return;
 	}
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: newuser, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: usernameExists.friends}});
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: newuser, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends}, profilePic: usernameExists.profilePic});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update username");
 	}
@@ -199,7 +153,7 @@ const changePassword = async function changePassword(old, newpass, username){
 		return;
 	}
 	let hashPassword = await bcrypt.hash(newpass, 16);
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: hashPassword, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: usernameExists.friends}});
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: hashPassword, score: usernameExists.score, friends: usernameExists.friends, profilePic: usernameExists.profilePic}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update password");
 	}
@@ -232,41 +186,7 @@ const addFriend = async function addFriend(username, friend){
 	}
 	let addedFriend = usernameExists.friends;
 	addedFriend.push(friend);
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: addedFriend}});
-	if(updated.modifiedCount == 0){
-		throw new Error("could not update password");
-	}
-	return await get(username);
-}
-
-const removeFriend = async function removeFriend(username, friend){
-	
-	if(username == undefined){
-		throw new Error("username is not defined");
-	}
-	if(friend == undefined){
-		throw new Error("password is not defined");
-	}
-	if(typeof(username) !== "string"){
-		throw new Error("username is not of type string");
-	}
-	if(typeof(friend) !== "string"){
-		throw new Error("friend is not of type string");
-	}
-	var accountsCollection = await accounts();
-	let usernameExists = await accountsCollection.findOne({username: username});
-	if(usernameExists == null){
-		throw new Error("no account with that username");
-		return;
-	}
-	let friendExists = await accountsCollection.findOne({username: friend});
-	if(friendExists == null){
-		throw new Error("cannot add friend: no account with that username");
-		return;
-	}
-	let f = usernameExists.friends;
-	f = f.filter(e => e !== friend); 
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: f}});
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: addedFriend, profilePic: usernameExists.profilePic}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update password");
 	}
@@ -283,8 +203,7 @@ const updateScore = async function updateScore(username, score){
 	if(score == undefined){
 		throw new Error("score is not defined");
 	}
-	score = Number(score);
-	if(isNaN(score)){
+	if(typeof(score) !== "number"){
 		throw new Error("score is not of type number");
 	}
 	var accountsCollection = await accounts();
@@ -293,7 +212,7 @@ const updateScore = async function updateScore(username, score){
 		throw new Error("no account with that username");
 		return;
 	}
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: score, itemsInventory: usernameExists.itemsInventory, friends: usernameExists.friends}});
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: score, friends: usernameExists.friends, profilePic: usernameExists.profilePic}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update score");
 	}
@@ -301,4 +220,46 @@ const updateScore = async function updateScore(username, score){
 
 }
 
-module.exports = {create,createFromGoogleLogin , get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend, updateScore};
+const getPhoto = async function getPhoto(username){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists == null){
+		throw new Error("no account with that username");
+	}
+	return usernameExists.profilePic;	
+}
+
+const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	if(newPhoto == undefined){
+		throw new Error("new profile photo is not defined");
+	}
+	if(typeof(newPhoto) !== "string"){
+		throw new Error("new profile photo is not of type string");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists == null){
+		throw new Error("no account with that username");
+		return;
+	}
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: newPhoto}});
+	if(updated.modifiedCount == 0){
+		throw new Error("could not update profile photo");
+	}
+	return await get(username);
+
+}
+
+module.exports = {create, get, login, changeUsername, changePassword, addFriend, updateScore, getPhoto, uploadNewPhoto};
