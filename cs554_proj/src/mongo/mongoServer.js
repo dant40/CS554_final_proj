@@ -45,13 +45,13 @@ app.post("/api/login", async (req, res) => {
     return res.json(acc)
 })
 
-app.get("/api/get", async (req,res) => {
+app.post("/api/get", async (req,res) => {
     var acc = {"formatting issue" :"your json was bad!"};
     try{
         const body = req.body;
         if(body.username){
              acc = await accounts.get(body.username)
-             console.log(acc)
+             //console.log(acc)
         }
     }catch(e){
         console.log(e)

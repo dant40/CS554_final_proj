@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 //import logo from './logo.svg';
 import {
   BrowserRouter as Router,
@@ -15,6 +15,26 @@ import Friends from "./Friends"
 function App() {
     
   const [user,setUser] = useState(null);
+
+  useEffect( () => {
+    async function refreshHandler(){
+      if(localStorage.getItem("username") && user === null){
+        let bod= {"username":localStorage.getItem("username")}
+        const response = await fetch("http://localhost:3001/api/get",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            body: JSON.stringify(bod)
+        })
+        const js = await response.json();
+        if(js) setUser(js)
+      }
+    }
+    refreshHandler()
+
+  })
+
   return (
       <div className="App">
         <Router>
