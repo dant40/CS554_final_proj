@@ -49,6 +49,9 @@ function App() {
                 <Login onLogin={setUser} />
               )}
             </Route>
+            <Route exact path="/pp">
+              <Form user={"alex"}></Form>
+            </Route>
             <Route exact path="/friends">
               {user !== null ? <Friends user={user} /> : <Redirect to="/" />}
             </Route>

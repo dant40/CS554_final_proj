@@ -1,7 +1,7 @@
 const mongoCollections = require("./collection");
 const accounts = mongoCollections.accounts;
 const bcrypt = require("bcryptjs");
-const gm = require("gm");
+const gm = require("gm").subClass({imageMagick: true});
 
 const create = async function create(username, password){
 	if(username == undefined){
@@ -340,12 +340,14 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 	if(usernameExists == null){
 		throw new Error("no account with that username");
 	}
-	gm(usernameExists.profilePic)
-		.resize(100,100)
-		.write('../../public/image/pfp/'+username+'.jpg',function(err){
-			if(err) console.log(err)
-			consolge.log("conversion completed")
-		})
+
+	//im.identify(newPhoto);
+	gm(newPhoto)//This doesn't work for some reason
+	.resize(100,100)
+	.write('../../public/images/pfp/'+username+'.jpg',function(err){
+		if(err) console.log(err)
+		console.log("conversion completed")
+	}) 
 	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: "../../public/image/pfp/"+username+".jpg"}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update profile photo");
