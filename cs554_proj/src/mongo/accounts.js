@@ -341,4 +341,4 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 
 }
 
-module.exports = {create, createFromGoogleLogin, get, getAll, login, changeUsername, changePassword, addFriend, removeFriend, updateScore, getPhoto, uploadNewPhoto};
+module.exports = {create, createFromGoogleLogin, get, getSearch, login, changeUsername, changePassword, addFriend, removeFriend, updateScore, getPhoto, uploadNewPhoto};
