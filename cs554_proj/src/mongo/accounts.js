@@ -163,7 +163,7 @@ const changeUsername = async function changeUsername(old, newuser, password){
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update username");
 	}
-	return await updated;
+	return await get(newuser);
 }
 
 const changePassword = async function changePassword(old, newpass, username){

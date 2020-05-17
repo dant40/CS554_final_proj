@@ -80,8 +80,8 @@ function Home(props){
                 })
                 const js = await response.json();
                 localStorage.setItem("username",newUsername);
-                console.log(js)
-                //location.reload(true)
+                setUser(js)
+                location.reload(true)
             }
         }
         else if(url === "changePassword"){
