@@ -12,6 +12,7 @@ import Login from "./Login"
 import Home from "./Home"
 import GameDev from "./GameDev"
 import Friends from "./Friends"
+
 function App() {
     
   const [user,setUser] = useState(null);
