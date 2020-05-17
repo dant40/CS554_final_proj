@@ -38,7 +38,7 @@ var fertilizerApple, fertilizerOrange, fertilizerPeach;
 var fertilizerAppleOwned, fertilizerOrangeOwned, fertilizerPeachOwned;
 var pBest = 0; //mongo good maybe
 var pBestText;
-var workerText;
+var workersText;
 var fertText;
 var username;
 
@@ -113,7 +113,7 @@ async function create() {
     fontSize: "32px",
     fill: "#000",
   });
-  workerText = this.add.text(10, 112, "Workers:" + workerNum, {
+  workersText = this.add.text(10, 112, "Workers:" + workerNum, {
     fontSize: "32px",
     fill: "#000",
   });
@@ -254,7 +254,7 @@ async function create() {
       workerNum++;
       moneyNum -= 10;
       moneyText.setText("$" + moneyNum);
-      workerText.setText("workers: " + workerNum);
+      workersText.setText("Workers: " + workerNum);
     }
   });
 
