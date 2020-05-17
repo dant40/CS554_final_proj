@@ -17,24 +17,25 @@ function Login(props) {
   //     console.log(props)
   // })
 
-  async function handleSignIn() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(async (result) => {
-          let bod = { username: result.displayName };
-          const response = await fetch("http://localhost:3001/api/create", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bod),
-          });
-          const js = await response.json();
-          //console.log(js)
-          props.onLogin(js);
+   async function handleSignIn(){
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try{
+            firebase.auth().signInWithPopup(provider).then(async (result) =>
+                { 
+                    let bod= {"username": result.displayName}
+                    const response = await fetch("http://localhost:3001/api/create",{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                          },
+                        body: JSON.stringify(bod)
+                    })
+                    const js = await response.json();
+                    //console.log(js)
+                    if(js.username){
+                        window.localStorage.setItem("username", js.username)
+                        props.onLogin(js); 
+                    }
 
           //const acc =accounts.createFromGoogleLogin(result.user.displayName)
           //props.onLogin(acc)
@@ -44,39 +45,47 @@ function Login(props) {
     }
   }
 
-  async function handleNormalSignIn(e) {
-    e.preventDefault();
-    if (username !== "" && password !== "") {
-      let bod = { username: username, password: password };
-      const response = await fetch("http://localhost:3001/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bod),
-      });
-      const js = await response.json();
-      //console.log(js)
-      props.onLogin(js);
+    async function handleNormalSignIn(e){
+        e.preventDefault();
+        if(username !== "" && password !== ""){
+            let bod= {"username": username, "password": password}
+            const response = await fetch("http://localhost:3001/api/login",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const js = await response.json();
+            //console.log(js)
+            if(js.username){
+                window.localStorage.setItem("username", js.username)
+                props.onLogin(js); 
+            }
+        }
     }
   }
 
-  async function handleNormalCreate(e) {
-    //const acc = accounts.create(username,password)
-    //props.onLogin(acc)
-    e.preventDefault();
-    if (username !== "" && password !== "") {
-      let bod = { username: username, password: password };
-      const response = await fetch("http://localhost:3001/api/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bod),
-      });
-      const js = await response.json();
-      //console.log(js)
-      props.onLogin(js);
+    async function handleNormalCreate(e){
+        //const acc = accounts.create(username,password)
+        //props.onLogin(acc)
+        e.preventDefault();
+        if(username !== "" && password !== ""){
+            let bod= {"username": username, "password": password}
+            const response = await fetch("http://localhost:3001/api/create",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify(bod)
+            })
+            const js = await response.json();
+            //console.log(js)
+            if(js.username){
+                window.localStorage.setItem("username", js.username)
+                props.onLogin(js); 
+            }
+        }
     }
   }
 

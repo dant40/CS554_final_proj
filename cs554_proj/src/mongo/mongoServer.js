@@ -1,6 +1,25 @@
 const accounts = require("./accounts")
 const express = require("express");
 const app = express();
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const jimp = require('jimp');
+const mongoCollections = require("./collection");
+const photos = mongoCollections.photos;
+
+
+// SET STORAGE
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, "image" +  file.originalname);
+  }
+});
+
+var upload = multer({ storage: storage }).single('file');
 app.use(express.json())
 //in the essence of time, these mongo routes are just wrappers and don't do
 //much error checking, they expect things to be well formed
@@ -45,13 +64,13 @@ app.post("/api/login", async (req, res) => {
     return res.json(acc)
 })
 
-app.get("/api/get", async (req,res) => {
+app.post("/api/get", async (req,res) => {
     var acc = {"formatting issue" :"your json was bad!"};
     try{
         const body = req.body;
         if(body.username){
              acc = await accounts.get(body.username)
-             console.log(acc)
+             //console.log(acc)
         }
     }catch(e){
         console.log(e)
@@ -156,9 +175,57 @@ app.post("/api/save", async (req,res) => {
     return res.json(acc)
 })
 
+app.post("/api/updateScore", async(req,res) =>{
+    var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username && body.score){
+             acc = await accounts.updateScore(body.username,body.score)
+             console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+    return res.json(acc)
+})
+
+// @route GET /
+// @desc Loads form
+app.get("/api/getPhoto", async function (req,res){
+  var acc ={"Formatting issue" :"your json was bad!"};
+    try{
+        const body = req.body;
+        if(body.username){
+             url = await accounts.getPhoto(body.username);
+             var photosCollection = await photos();
+             acc = await photosCollection.findOne({filepath: url});
+             //console.log(acc)
+        }
+    }catch(e){
+        console.log(e)
+        return res.status(400).json({error: e})
+    }
+    return res.json(acc)
+})
+
+app.post('/api/uploadNewPhoto', async (req, res) => {
+  var img = fs.readFileSync(req.file.path);
+  var encode_image = img.toString('base64');
+  // Define a JSONobject for the image attributes for saving to database
+    upload(req.body, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+    return res.status(200).send(req.file)
+    })
+});
+
 app.get("/*", async (req,res) => {
     return res.status(404).json({error: "nice try kiddo"})
-})
+});
 
 app.listen(3001, () => {
     console.log("Mongo Server Going Up");
