@@ -364,7 +364,7 @@ function update() {
     //fruit.setActive(false).setVisible(false);
   } else if (currCost === 2) {
     //fruit.setActive(false).setVisible(false);
-    fruit = this.add.image(400, 200, "orange").setInteractive();
+    fruit = this.add.image(200, 250, "orange").setInteractive();
     fruit.on("pointerdown", function (pointer) {
       //Increment oranges with every touch
       if (fertilizerOrangeOwned) {
@@ -375,7 +375,7 @@ function update() {
       orangeText.setText("Oranges: " + orangeNum);
     });
   } else if (currCost === 3) {
-    fruit = this.add.image(400, 200, "peach").setInteractive();
+    fruit = this.add.image(620, 270, "peach").setInteractive();
     fruit.on("pointerdown", function (pointer) {
       //Increment peaches with every touch
       if (fertilizerPeachOwned) {
