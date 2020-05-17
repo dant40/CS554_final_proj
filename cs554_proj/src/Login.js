@@ -5,7 +5,7 @@ import {Form } from 'react-bootstrap'
 import firebase from "firebase/app";
 import "firebase/auth";
 import Modal from 'react-bootstrap/Modal';
-
+//need to put a try catch around all the login features and anything else that uses mongo
 //import {Redirect } from "react-router-dom";
 function Login(props){
     const [username,setUsername] = useState("")

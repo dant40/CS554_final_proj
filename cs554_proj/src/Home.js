@@ -85,7 +85,7 @@ function Home(props){
             }
         }
         else if(url === "changePassword"){
-            if(newUsername !== "" && password !== ""){
+            if(newPassword !== "" && password !== ""){
                 let bod= {"username": user.username,"newPassword": newPassword , "password": password}
                 const response = await fetch("http://localhost:3001/api/"+url,{
                     method: 'POST',
@@ -95,6 +95,7 @@ function Home(props){
                     body: JSON.stringify(bod)
                 })
                 const js = await response.json();
+                location.reload(true);
         }
         
         }
@@ -130,6 +131,7 @@ function Home(props){
             )
         }
         else if(!flag){
+            return(
             <Form>
                 <Form.Group>
                     <Form.Label>New Password</Form.Label>
@@ -146,6 +148,7 @@ function Home(props){
                         Change
                 </Button>
             </Form>
+            )
         }
     }
 

@@ -167,6 +167,7 @@ const changeUsername = async function changeUsername(old, newuser, password){
 }
 
 const changePassword = async function changePassword(old, newpass, username){
+	console.log("changing password")
 	if(old == undefined){
 		throw new Error("old password is not defined");
 	}
