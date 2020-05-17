@@ -118,7 +118,7 @@ function Login(props) {
           </Form.Group>
           <button
             className="btn btn-lg btn-primary btn-block"
-            onClick={() => setShow(true)}
+            onClick={(e) => handleNormalCreate(e)}
           >
             Sign Up
           </button>

@@ -29,6 +29,7 @@ function Home(props){
             setFlag(true)
         }
         else {
+            setShow(true)
             setGoogleFlag(true)
         }
 
@@ -40,6 +41,7 @@ function Home(props){
             setFlag(false)
         }
         else {
+            setShow(true)
             setGoogleFlag(true)
         }
 
@@ -85,12 +87,19 @@ function Home(props){
     }
 
     function createModalBody(){
+       
         if(googleFlag){
+            
             return(
-                <div>
-                    <p>Sorry, you can't change google credentials here.</p>
-                    <p>Please change your credentials through their channels.</p>
-                </div>
+                // <div>
+                //     <p>Sorry, you can't change google credentials here.</p>
+                //     <p>Please change your credentials through their channels.</p>
+                // </div>
+                <Form>
+                    <Form.Label>You appear to be logged in with google.
+                        Please change credentials through their channels.
+                    </Form.Label>
+                </Form>
             )
         }
         else if(flag){
