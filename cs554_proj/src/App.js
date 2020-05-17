@@ -42,13 +42,6 @@ function App() {
     <div className="App">
       <Router>
         <div>
-          <nav>
-            {/* <ul>
-                <li>
-                  <Link to="/home">Home</Link>
-                </li>
-              </ul> */}
-          </nav>
           <Switch>
             <Route exact path="/">
               {user !== null ? (
@@ -68,14 +61,6 @@ function App() {
       </Router>
     </div>
   );
-
-  // function Home() {
-  //   return (
-  //     <div>
-  //       <h2>Welcome {user.email}</h2>
-  //     </div>
-  //   );
-  // }
 }
 
 export default App;
