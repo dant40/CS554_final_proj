@@ -106,7 +106,7 @@ function Friends(props){
     function createSearchResults(){
         try{
             return( 
-                <Container>
+                <Container className = "friendContainer">
                     <h2>Search Results</h2>
                     { searchResults.map( (item) => {
                         if(item.username !== props.user.username)
@@ -155,7 +155,7 @@ function Friends(props){
     }
 
     return(
-        <div>
+        <div className = "webpage">
             <TopBar></TopBar>
 
             {createFriendsList()}

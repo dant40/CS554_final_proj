@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Phaser from "phaser";
+import TopBar from "./TopBar";
 var config = {
   type: Phaser.CANVAS,
   width: 800,
@@ -386,6 +387,9 @@ function start(score, user) {
   new Phaser.Game(config);
 }
 function GameDev(props) {
-  return <div>{start(props.user.score, props.user.username)}</div>;
+  return <div>
+      <TopBar></TopBar>
+      {start(props.user.score, props.user.username)}
+    </div>;
 }
 export default GameDev;

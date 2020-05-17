@@ -160,34 +160,28 @@ function Login(props) {
   }
 
   return (
-    <div className="container">
-      <div className="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-          <div className="card card-signin my-5">
-            <div className="card-body">
-              <h2 className="card-title text-center">Login</h2>
-              <div>{createForm(false)}</div>
-              <hr class="my-4"></hr>
-              <button
-                className="btn btn-lg btn-primary btn-block"
-                onClick={() => handleSignIn()}
-              >
-                <FcGoogle />
-                {"       "}
-                Sign in with Google
-              </button>
+    <div className="webpage">
+      <div className="container">
+        <div className="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div className="card card-signin my-5">
+              <div className="card-body">
+                <h2 className="card-title text-center">Login</h2>
+                <div>{createForm(false)}</div>
+                <hr class="my-4"></hr>
 
-              <Modal show={show} onHide={() => setShow(false)}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Sign Up</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{createForm(true)}</Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => setShow(false)}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
+                <Modal show={show} onHide={() => setShow(false)}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Sign Up</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>{createForm(true)}</Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShow(false)}>
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
             </div>
           </div>
         </div>
