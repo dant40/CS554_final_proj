@@ -207,7 +207,7 @@ app.get("/api/getPhoto", async function (req,res){
         return res.status(400).json({error: e})
     }
     return res.json(acc)
-});
+})
 
 app.post('/api/uploadNewPhoto', upload.single('image'), async (req, res) => {
   var img = fs.readFileSync(req.file.path);
@@ -232,12 +232,11 @@ app.post('/api/uploadNewPhoto', upload.single('image'), async (req, res) => {
   }
   var pfp = await accounts.uploadNewPhoto(req.body.username, finalImg.filepath);
   return pfp;
-
-}
+});
 
 app.get("/*", async (req,res) => {
     return res.status(404).json({error: "nice try kiddo"})
-})
+});
 
 app.listen(3001, () => {
     console.log("Mongo Server Going Up");
