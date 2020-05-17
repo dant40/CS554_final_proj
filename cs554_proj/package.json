@@ -30,6 +30,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "startChatServer": "node ./src/chatStuff/ChatServer.js",
-    "startMongoServer": "node ./src/mongo/mongoServer.js"
+    "startMongoServer": "node ./src/mongo/mongoServer.js",
+    "startEverything": "node ./src/chatStuff/ChatServer.js &  node ./src/mongo/mongoServer.js & react-scripts start "
   }
 }
