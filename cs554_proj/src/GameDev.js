@@ -334,8 +334,6 @@ function GameDev(props){
     return(
         <div>
           {start(props.user.score, props.user.username)}
-          <p>{props.user.score}</p>
-          <p>{props.user.username}</p>
         </div>
     )
 }
