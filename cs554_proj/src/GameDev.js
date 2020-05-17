@@ -17,6 +17,7 @@ var fruit;
 var appleText, orangeText, peachText, moneyText, saveText, workerText;
 var appleSell, orangeSell, peachSell;
 var plusApple, plusOrange, plusPeach, minusApple, minusOrange, minusPeach;
+var addAll, addAllButton;
 var appleSellNum = 0;
 var peachSellNum = 0;
 var orangeSellNum = 0;
@@ -197,6 +198,25 @@ async function create() {
     fontSize: "24px",
     fill: "#000",
   });
+
+
+  addAll = this.add.text(120,510, "Sell all fruits",{
+    fontSize: "24px",
+    fill: "#000",
+  })
+  addAllButton = this.add.image(365,517, "plus").setInteractive();
+  addAllButton.on("pointerdown",function(pointer){
+     appleSellNum = appleNum
+     orangeSellNum = orangeNum
+     peachSellNum = peachNum
+     appleSell.setText("Apples($1): " + appleSellNum);
+     orangeSell.setText("Oranges($2): " + orangeSellNum);
+     peachSell.setText("Peaches($5): " + peachSellNum);
+     moneyEarned = appleSellNum + (2 * orangeSellNum) + (5 * peachSellNum)
+     moneyEarnedText.setText("Money Earned: " + moneyEarned);
+  })
+
+
 
   //sell fruit button
   sell = this.add.image(50, 520, "sell").setInteractive();
