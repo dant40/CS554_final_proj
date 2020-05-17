@@ -41,6 +41,40 @@ const create = async function create(username, password){
 	return account;
 }
 
+const createFromGoogleLogin = async function createFromGoogleLogin(username){
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+
+	//let hashPassword = await bcrypt.hash(password, 16);
+
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists !== null){
+		throw new Error("username has been taken");
+		return;
+	}
+
+	var newAccount = {
+		"username": username,
+		"password": "",
+		"score": 0,
+		"friends": [],
+		"profilePic": '../../public/images/default.jpg'
+	}
+
+	var insert = await accountsCollection.insertOne(newAccount);
+	if(insert.insertedCount == 0)
+		throw new Error("account cannot be created")
+	var insertId = insert.insertedId;
+	var account = await accountCollection.findOne({_id: insertId});
+	return account;
+}
+
+
 const login = async function login(username, password){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -80,6 +114,15 @@ const get = async function get(username){
 		throw new Error("no account with that username");
 	}
 	return usernameExists;
+}
+
+const getSearch = async function getAll(term){
+	
+	var accountsCollection = await accounts();
+	//console.log(term)
+	let users = await accountsCollection.find({"username" : {$regex : ".*" + term+ ".*"}}).toArray();
+	//console.log(users)
+	return users;
 }
 
 const changeUsername = async function changeUsername(old, newuser, password){
@@ -193,6 +236,41 @@ const addFriend = async function addFriend(username, friend){
 	return await get(username);
 }
 
+
+const removeFriend = async function removeFriend(username, friend){
+	
+	if(username == undefined){
+		throw new Error("username is not defined");
+	}
+	if(friend == undefined){
+		throw new Error("password is not defined");
+	}
+	if(typeof(username) !== "string"){
+		throw new Error("username is not of type string");
+	}
+	if(typeof(friend) !== "string"){
+		throw new Error("friend is not of type string");
+	}
+	var accountsCollection = await accounts();
+	let usernameExists = await accountsCollection.findOne({username: username});
+	if(usernameExists == null){
+		throw new Error("no account with that username");
+		return;
+	}
+	let friendExists = await accountsCollection.findOne({username: friend});
+	if(friendExists == null){
+		throw new Error("cannot add friend: no account with that username");
+		return;
+	}
+	let f = usernameExists.friends;
+	f = f.filter(e => e !== friend); 
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, itemsInventory: usernameExists.itemsInventory, friends: f}});
+	if(updated.modifiedCount == 0){
+		throw new Error("could not update password");
+	}
+	return await get(username);
+}
+
 const updateScore = async function updateScore(username, score){
 	if(username == undefined){
 		throw new Error("username is not defined");
@@ -203,7 +281,8 @@ const updateScore = async function updateScore(username, score){
 	if(score == undefined){
 		throw new Error("score is not defined");
 	}
-	if(typeof(score) !== "number"){
+	score = Number(score);
+	if(isNaN(score)){
 		throw new Error("score is not of type number");
 	}
 	var accountsCollection = await accounts();
@@ -262,4 +341,4 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 
 }
 
-module.exports = {create, get, login, changeUsername, changePassword, addFriend, updateScore, getPhoto, uploadNewPhoto};
+module.exports = {create, createFromGoogleLogin, get, getAll, login, changeUsername, changePassword, addFriend, removeFriend, updateScore, getPhoto, uploadNewPhoto};
