@@ -37,7 +37,7 @@ const create = async function create(username, password){
 	if(insert.insertedCount == 0)
 		throw new Error("account cannot be created")
 	var insertId = insert.insertedId;
-	var account = await accountCollection.findOne({_id: insertId});
+	var account = await accountsCollection.findOne({_id: insertId});
 	return account;
 }
 
@@ -70,7 +70,7 @@ const createFromGoogleLogin = async function createFromGoogleLogin(username){
 	if(insert.insertedCount == 0)
 		throw new Error("account cannot be created")
 	var insertId = insert.insertedId;
-	var account = await accountCollection.findOne({_id: insertId});
+	var account = await accountsCollection.findOne({_id: insertId});
 	return account;
 }
 
@@ -159,7 +159,7 @@ const changeUsername = async function changeUsername(old, newuser, password){
 		throw new Error("that username has already been taken");
 		return;
 	}
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: newuser, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends}, profilePic: usernameExists.profilePic});
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: newuser, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: usernameExists.profilePic}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update username");
 	}
