@@ -1,6 +1,7 @@
 const mongoCollections = require("./collection");
 const accounts = mongoCollections.accounts;
 const bcrypt = require("bcryptjs");
+const gm = require("gm");
 
 const create = async function create(username, password){
 	if(username == undefined){
@@ -312,7 +313,13 @@ const getPhoto = async function getPhoto(username){
 	if(usernameExists == null){
 		throw new Error("no account with that username");
 	}
-	return usernameExists.profilePic;	
+	gm(usernameExists.profilePic)
+		.resize(100,100)
+		.write('../../public/image/pfp/'+username+'.jpg',function(err){
+			if(err) console.log(err)
+			consolge.log("conversion completed")
+		})
+	return "../../public/image/pfp/"+username+".jpg";	
 }
 
 const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
