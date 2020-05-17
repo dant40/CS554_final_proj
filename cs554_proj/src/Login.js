@@ -3,9 +3,11 @@ import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
 import firebase from "firebase/app";
 import "firebase/auth";
+import fb from "./firebase"
 import Modal from "react-bootstrap/Modal";
 import { FcGoogle } from "react-icons/fc";
 import "./Login.css";
+
 //need to put a try catch around all the login features and anything else that uses mongo
 //import {Redirect } from "react-router-dom";
 function Login(props) {
@@ -15,15 +17,17 @@ function Login(props) {
   // useEffect(() => {
   //     console.log(props)
   // })
-
-  async function handleSignIn() {
+  
+  async function handleSignIn(e) {
+    e.preventDefault();
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
       firebase
         .auth()
         .signInWithPopup(provider)
         .then(async (result) => {
-          let bod = { username: result.displayName };
+          let bod = { username: result.user.displayName };
+         
           const response = await fetch("http://localhost:3001/api/create", {
             method: "POST",
             headers: {
@@ -32,7 +36,6 @@ function Login(props) {
             body: JSON.stringify(bod),
           });
           const js = await response.json();
-          //console.log(js)
           if (js.username) {
             window.localStorage.setItem("username", js.username);
             props.onLogin(js);
@@ -169,7 +172,7 @@ function Login(props) {
                 <h2 className="card-title text-center">Login</h2>
                 <div>{createForm(false)}</div>
                 <hr class="my-4"></hr>
-
+                <Button onClick = {(e) => handleSignIn(e)}>Sign In With Google</Button>
                 <Modal show={show} onHide={() => setShow(false)}>
                   <Modal.Header closeButton>
                     <Modal.Title>Sign Up</Modal.Title>
