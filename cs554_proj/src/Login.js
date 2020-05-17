@@ -30,8 +30,10 @@ function Login(props){
                     })
                     const js = await response.json();
                     //console.log(js)
-                    window.localStorage.setItem("username", js.username)
-                    props.onLogin(js); 
+                    if(js.username){
+                        window.localStorage.setItem("username", js.username)
+                        props.onLogin(js); 
+                    }
 
                     //const acc =accounts.createFromGoogleLogin(result.user.displayName)
                     //props.onLogin(acc)
@@ -55,8 +57,10 @@ function Login(props){
             })
             const js = await response.json();
             //console.log(js)
-            window.localStorage.setItem("username", js.username)
-            props.onLogin(js); 
+            if(js.username){
+                window.localStorage.setItem("username", js.username)
+                props.onLogin(js); 
+            }
         }
     }
 
@@ -75,8 +79,10 @@ function Login(props){
             })
             const js = await response.json();
             //console.log(js)
-            window.localStorage.setItem("username", js.username)
-            props.onLogin(js); 
+            if(js.username){
+                window.localStorage.setItem("username", js.username)
+                props.onLogin(js); 
+            }
         }
     }
 
