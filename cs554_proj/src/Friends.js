@@ -37,7 +37,7 @@ function Friends(props){
         //will harcode a few friends for now.
         //const ls = accounts.get(props.user.username)
         if(flag){ 
-            console.log(props.user.friends)
+            //console.log(props.user.friends)
             setFriendList(props.user.friends)
             setFlag(false)
         }

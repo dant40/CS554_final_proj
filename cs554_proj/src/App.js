@@ -13,7 +13,7 @@ import Login from "./Login";
 import Home from "./Home";
 import GameDev from "./GameDev";
 import Friends from "./Friends";
-
+import Form from "./Form.js"
 function App() {
   const [user, setUser] = useState(null);
 
