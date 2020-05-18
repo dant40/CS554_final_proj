@@ -195,8 +195,6 @@ app.post('/api/uploadNewPhoto', async (req, res) => {
         const body = req.body;
         if(body.username){
              acc = await accounts.uploadNewPhoto(body.username, body.newPhoto);
-
-             //console.log(acc)
         }
     }catch(e){
         console.log(e)

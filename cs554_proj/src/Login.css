@@ -3,7 +3,7 @@
 /* * {
   box-sizing: border-box;
 } */
-.webpage {
+body {
   background: #1c8ef9 !important;
   min-height: 100vh;
   display: flex;

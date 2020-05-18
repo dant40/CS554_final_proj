@@ -31,7 +31,7 @@ const create = async function create(username, password){
 		"password": hashPassword,
 		"score": 0,
 		"friends": [],
-		"profilePic": '../../public/images/default.jpg'
+		"profilePic": 'default.jpg'
 	}
 
 	var insert = await accountsCollection.insertOne(newAccount);
@@ -64,7 +64,7 @@ const createFromGoogleLogin = async function createFromGoogleLogin(username){
 		"password": "",
 		"score": 0,
 		"friends": [],
-		"profilePic": '../../public/images/default.jpg'
+		"profilePic": 'default.jpg'
 	}
 
 	var insert = await accountsCollection.insertOne(newAccount);
@@ -340,16 +340,15 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 	if(usernameExists == null){
 		throw new Error("no account with that username");
 	}
-
 	//im.identify(newPhoto);
-	let newPhotoURL = newPhoto.substring(0, newPhoto.length()-4) + "2.jpg"
+	let newPhotoURL = newPhoto.substring(0, newPhoto.length-4) + "2.jpg"
 	gm(newPhoto)//This doesn't work for some reason
 	.resize(100,100)
 	.write(newPhotoURL,function(err){
 		if(err) console.log(err)
 		console.log("conversion completed")
 	}) 
-	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: "../../public/image/pfp/"+username+".jpg"}});
+	let updated = await accountsCollection.updateOne({_id: usernameExists._id}, {$set:{username: usernameExists.username, password: usernameExists.password, score: usernameExists.score, friends: usernameExists.friends, profilePic: newPhotoURL}});
 	if(updated.modifiedCount == 0){
 		throw new Error("could not update profile photo");
 	}

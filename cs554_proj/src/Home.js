@@ -16,8 +16,9 @@ function Home(props){
     const [newUsername,setNewUsername] = useState("")
     const [password, setPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
-    
+    let img = "../public/images/default.jpg" 
     useEffect( () => {
+        console.log(props)
         try{
             
             document.getElementsByTagName('canvas')[0].remove()
@@ -166,12 +167,14 @@ function Home(props){
             )
         }
     }
-
+    let x = "default.jpg"
     return(
         <div className = "webpage">
             <TopBar></TopBar>
-            <h1 style={{marginTop: "150px"}}>Welcome {props.user.username}</h1>
-            <img src = {props.user.profilePic} alt="profile picture"></img>
+            <h1 style={{marginTop: "150px"}}>Welcome {user.username}</h1>
+           
+            {/* {console.log(`../public/images/`)} */}
+            <img src= {require(`../public/images/${props.user.profilePic}`)} />
             <Button variant ="secondary" onClick = {() => handleChangeUsername()}>Change Username</Button>
             <Button variant ="secondary" onClick = {() => handleChangePassword()}>Change Password</Button>
             <Button variant ="secondary" onClick = {(e) => handleLogout(e)}>Logout</Button>
