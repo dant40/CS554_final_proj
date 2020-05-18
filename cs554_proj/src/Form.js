@@ -44,8 +44,6 @@ class Form extends Component{
                             <option value="strawberry.jpg">Strawberry</option>
                             <option value="watermelon.jpg">Watermelon</option>
                         </select>
-                        <input type='text' 
-                        value = {this.state.url}/>
                     </div>
                 </form>
             </div>
