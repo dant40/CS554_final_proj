@@ -181,13 +181,16 @@ function Home(props){
         <div className = "webpage">
             <TopBar></TopBar>
             <h1 style={{marginTop: "150px"}}>Welcome {user.username}</h1>
-           
-            {/* {console.log(`../public/images/`)} */}
-            <img src= {require(`../public/images/${props.user.profilePic}`)} />
+            <div>
+                {/* {console.log(`../public/images/`)} */}
+                <img src= {require(`../public/images/${props.user.profilePic}`)} />
+            </div>
             <Button variant ="secondary" onClick = {() => handleChangeUsername()}>Change Username</Button>
             <Button variant ="secondary" onClick = {() => handleChangePassword()}>Change Password</Button>
             <Button variant ="secondary" onClick = {(e) => handleLogout(e)}>Logout</Button>
-            <Link to='/pp'>Change Profile Picture</Link>
+            <Button variant ="secondary">
+                <Link to='/pp'>Change Profile Picture</Link>
+            </Button>
             <Modal scrollable show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>Edit Profile</Modal.Title>

@@ -10,11 +10,8 @@ class Form extends Component{
         }
     }
     handlePicChange = async (event) => {
-        this.setState({
-            url: event.target.value
-        })
 
-        let bod = {username: this.state.username, newPhoto: this.state.url}
+        let bod = {username: this.state.username, newPhoto: event.target.value}
         console.log(bod)
         const response = await fetch("http://localhost:3001/api/uploadNewPhoto",{
             method: 'POST',
@@ -32,7 +29,7 @@ class Form extends Component{
             <form>
                 <div>
                     <label>Choose Profile Picture</label>
-                    <select value ={this.state.url} onChange={this.handlePicChange}>
+                    <select onChange={this.handlePicChange}>
                         <option value="banana.jpg">Banana</option>
                         <option value="blueberry.jpg">Blueberry</option>
                         <option value="default.jpg">Default</option>

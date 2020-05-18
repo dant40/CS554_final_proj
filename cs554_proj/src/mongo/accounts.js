@@ -343,7 +343,7 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 	//im.identify(newPhoto);
 	//console.log(process.cwd());
 	let changeThis = process.cwd()+"/public/images/"+newPhoto;
-	let newPhotoURL = newPhoto.substring(0, newPhoto.length-4) + "2.jpg"
+	let newPhotoURL = username+".jpg"
 	gm(changeThis)//This doesn't work for some reason
 	.resize(100,100)
 	.write(process.cwd()+"/public/images/"+newPhotoURL,function(err){
