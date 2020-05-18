@@ -92,6 +92,7 @@ function Friends(props) {
     } catch (e) {
       window.alert("Something went wrong! Please try again later.");
     }
+    window.location.reload();
   }
 
   async function removeFriend(e, name) {
@@ -111,6 +112,7 @@ function Friends(props) {
     } catch (e) {
       window.alert("Something went wrong! Please try again later.");
     }
+    window.location.reload();
   }
 
   function createSearchResults() {
