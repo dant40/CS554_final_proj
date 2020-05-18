@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import TopBar from "./TopBar"
 
 class Form extends Component{
     constructor(props){
@@ -26,6 +27,7 @@ class Form extends Component{
     }
     render(){
         return(
+            <TopBar></TopBar>
             <form>
                 <div>
                     <label>Choose Profile Picture</label>

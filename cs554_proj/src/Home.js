@@ -188,9 +188,9 @@ function Home(props){
             <Button variant ="secondary" onClick = {() => handleChangeUsername()}>Change Username</Button>
             <Button variant ="secondary" onClick = {() => handleChangePassword()}>Change Password</Button>
             <Button variant ="secondary" onClick = {(e) => handleLogout(e)}>Logout</Button>
-            <Button variant ="secondary">
+            {/* <Button variant ="secondary">
                 <Link to='/pp'>Change Profile Picture</Link>
-            </Button>
+            </Button> */}
             <Modal scrollable show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                 <Modal.Title>Edit Profile</Modal.Title>

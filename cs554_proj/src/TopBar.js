@@ -32,6 +32,11 @@ function TopBar() {
             Game
           </Nav.Link>
         </NavItem>
+        <NavItem className="navListItem">
+          <Nav.Link as={Link} to="/pp">
+            Change Profile Pic
+          </Nav.Link>
+        </NavItem>
       </Navbar>
     </div>
   );
