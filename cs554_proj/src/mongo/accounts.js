@@ -341,10 +341,12 @@ const uploadNewPhoto = async function uploadNewPhoto(username, newPhoto){
 		throw new Error("no account with that username");
 	}
 	//im.identify(newPhoto);
+	//console.log(process.cwd());
+	let changeThis = process.cwd()+"/public/images/"+newPhoto;
 	let newPhotoURL = newPhoto.substring(0, newPhoto.length-4) + "2.jpg"
-	gm(newPhoto)//This doesn't work for some reason
+	gm(changeThis)//This doesn't work for some reason
 	.resize(100,100)
-	.write(newPhotoURL,function(err){
+	.write(process.cwd()+"/public/images/"+newPhotoURL,function(err){
 		if(err) console.log(err)
 		console.log("conversion completed")
 	}) 
