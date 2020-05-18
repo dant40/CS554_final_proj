@@ -27,21 +27,23 @@ class Form extends Component{
     }
     render(){
         return(
-            <TopBar></TopBar>
-            <form>
-                <div>
-                    <label>Choose Profile Picture</label>
-                    <select onChange={this.handlePicChange}>
-                        <option value="banana.jpg">Banana</option>
-                        <option value="blueberry.jpg">Blueberry</option>
-                        <option value="default.jpg">Default</option>
-                        <option value="strawberry.jpg">Strawberry</option>
-                        <option value="watermelon.jpg">Watermelon</option>
-                    </select>
-                    <input type='text' 
-                    value = {this.state.url}/>
-                </div>
-            </form>
+            <div>
+                <TopBar></TopBar>
+                <form>
+                    <div>
+                        <label>Choose Profile Picture</label>
+                        <select onChange={this.handlePicChange}>
+                            <option value="banana.jpg">Banana</option>
+                            <option value="blueberry.jpg">Blueberry</option>
+                            <option value="default.jpg">Default</option>
+                            <option value="strawberry.jpg">Strawberry</option>
+                            <option value="watermelon.jpg">Watermelon</option>
+                        </select>
+                        <input type='text' 
+                        value = {this.state.url}/>
+                    </div>
+                </form>
+            </div>
         )
     }
 }export default Form
